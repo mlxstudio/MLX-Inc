@@ -1,0 +1,7 @@
+/* Courier Prime, bundled locally (replaces the Google Fonts <link>), so the packaged app works offline
+   and a strict Content-Security-Policy can forbid remote fonts.
+   Same faces the original page requested: 400, 700, 400 italic. The package ships latin + latin-ext,
+   so Czech and other Central-European characters render in the script font. */
+@import "@fontsource/courier-prime/400.css";
+@import "@fontsource/courier-prime/700.css";
+@import "@fontsource/courier-prime/400-italic.css";

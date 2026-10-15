@@ -1,0 +1,26 @@
+/* Script fonts bundled with MLX Ink (picker: Script > Script font). All five families ship regular, bold, italic and bold italic,
+   so nothing is synthesised and the PDF matches the screen. Courier Prime itself stays in src/fonts.css.
+   Licence: TeX Gyre fonts, GUST Font License (src/fonts/GUST-FONT-LICENSE.txt), (c) Bogusław Jackowski and Janusz M. Nowacki.
+   Files are the unmodified OpenType outlines, only repackaged as WOFF (no subsetting), covering Czech, Slovak, Polish, Hungarian and German.
+   font-display:block keeps a late face from reflowing the page in a different font first; the app re-measures when a face arrives.
+   They load from the app's own origin (url() relative to this file), so the CSP needs font-src 'self' like Courier Prime already does. */
+@font-face{font-family:"TeX Gyre Termes";font-style:normal;font-weight:400;font-display:block;src:url("./fonts/texgyretermes-regular.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Termes";font-style:normal;font-weight:700;font-display:block;src:url("./fonts/texgyretermes-bold.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Termes";font-style:italic;font-weight:400;font-display:block;src:url("./fonts/texgyretermes-italic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Termes";font-style:italic;font-weight:700;font-display:block;src:url("./fonts/texgyretermes-bolditalic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Pagella";font-style:normal;font-weight:400;font-display:block;src:url("./fonts/texgyrepagella-regular.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Pagella";font-style:normal;font-weight:700;font-display:block;src:url("./fonts/texgyrepagella-bold.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Pagella";font-style:italic;font-weight:400;font-display:block;src:url("./fonts/texgyrepagella-italic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Pagella";font-style:italic;font-weight:700;font-display:block;src:url("./fonts/texgyrepagella-bolditalic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Schola";font-style:normal;font-weight:400;font-display:block;src:url("./fonts/texgyreschola-regular.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Schola";font-style:normal;font-weight:700;font-display:block;src:url("./fonts/texgyreschola-bold.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Schola";font-style:italic;font-weight:400;font-display:block;src:url("./fonts/texgyreschola-italic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Schola";font-style:italic;font-weight:700;font-display:block;src:url("./fonts/texgyreschola-bolditalic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Heros";font-style:normal;font-weight:400;font-display:block;src:url("./fonts/texgyreheros-regular.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Heros";font-style:normal;font-weight:700;font-display:block;src:url("./fonts/texgyreheros-bold.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Heros";font-style:italic;font-weight:400;font-display:block;src:url("./fonts/texgyreheros-italic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Heros";font-style:italic;font-weight:700;font-display:block;src:url("./fonts/texgyreheros-bolditalic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Cursor";font-style:normal;font-weight:400;font-display:block;src:url("./fonts/texgyrecursor-regular.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Cursor";font-style:normal;font-weight:700;font-display:block;src:url("./fonts/texgyrecursor-bold.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Cursor";font-style:italic;font-weight:400;font-display:block;src:url("./fonts/texgyrecursor-italic.woff") format("woff")}
+@font-face{font-family:"TeX Gyre Cursor";font-style:italic;font-weight:700;font-display:block;src:url("./fonts/texgyrecursor-bolditalic.woff") format("woff")}
