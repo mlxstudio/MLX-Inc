@@ -1,10 +1,15 @@
-MISSING ASSET: no application icon was included in the project files I received.
+Windows application and installer branding assets:
 
-The Windows build will fail until these exist (tauri.conf.json -> bundle.icon):
-  32x32.png, 128x128.png, 128x128@2x.png, icon.ico
+  icon.png                 Source mark used to generate the app icons
+  icon-source.svg          Supplied app icon artwork
+  feather-source.svg       Supplied teal feather artwork
+  32x32.png, 128x128.png,
+  128x128@2x.png, icon.ico  Icons used by the app and Windows executable
+  installer-header.bmp     NSIS installer and uninstaller header artwork (150 x 57)
+  installer-sidebar.bmp    NSIS welcome and finish artwork (164 x 314)
+  ../nsis/installer.nsi    Branded installer theme and explicit uninstaller icon
 
-Generate them from your real logo (a square PNG, ideally 1024x1024):
-    npx tauri icon path\to\your-logo.png
+To regenerate the app icons from a square PNG:
+  npx tauri icon path\to\your-logo.png --output src-tauri\icons
 
-(The icons in your Tauri starter project are Tauri's defaults; they would work as a temporary
-placeholder, but they are not MLX Ink's identity.)
+If the mark changes, also update the NSIS header and sidebar bitmaps to match.

@@ -6,8 +6,8 @@
  *
  *  1. window.mlxDesktop.saveText()  – native "Save as" dialog for every export (browser downloads
  *     are unreliable inside a WebView).
- *  2. window.mlxDesktop.checkForUpdates() – checks for signed GitHub releases and installs only
- *     after the user confirms.
+ *  2. window.mlxDesktop.checkForUpdates() – checks for signed GitHub releases and silently installs
+ *     them when available.
  *  3. A write-through mirror of the app's localStorage data (keys "klapka.*") to real files in the
  *     app-data folder, so scripts survive a cleared/reset WebView profile.
  *     Since schema 3 the app has its own disk store (Vault in index.html, Rust vault_* commands in
@@ -21,7 +21,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { check } from "@tauri-apps/plugin-updater";
 
-type UpdateCheckResult = "up-to-date" | "declined" | "installed";
+type UpdateCheckResult = "up-to-date" | "installed";
 
 interface MlxDesktop {
   /** Shows the native Save dialog. Resolves to the saved file's name, or null if cancelled. */
@@ -54,14 +54,6 @@ async function checkForUpdates(): Promise<UpdateCheckResult> {
   if (!update) return "up-to-date";
 
   try {
-    const notes = update.body?.trim();
-    const message = [
-      `MLX Ink ${update.version} is available (current version: ${update.currentVersion}).`,
-      notes ? `\n\nRelease notes:\n${notes}` : "",
-      "\n\nInstall this update now?",
-    ].join("");
-    if (!window.confirm(message)) return "declined";
-
     window.dispatchEvent(new Event("mlxink:update-downloading"));
     await update.downloadAndInstall();
     return "installed";

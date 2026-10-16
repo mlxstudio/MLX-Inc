@@ -1,6 +1,6 @@
 [package]
 name = "mlx-ink"
-version = "0.1.1"
+version = "0.1.2"
 description = "MLX Ink"
 edition = "2021"
 

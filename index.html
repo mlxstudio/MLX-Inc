@@ -253,6 +253,27 @@ FRONT PAGE (title page; sections "title page" in the script and CSS "front page:
   never touch text. P.docType (script|treatment|synopsis|characters) is a seam for a future documents step: it sets the doctype label; the
   documents step itself does not exist in this build. No Rust/config files changed.
 
+ACTOR SIDES (openActorExport, axJobs, axBegin/axEnd, runActorExport; entry points: character hub left column and actor form, Tools > Characters)
+  One job = one actor x one scope (full script with their lines marked, or only their scenes). Jobs go through the normal print path one after another:
+  axPrint() sets AXJ, window.print() fires beforeprint -> axBegin(), afterprint -> axEnd() + AXJ.fin(). The script is never touched: highlight = class .axh
+  (+ .app.ax-yellow/grey), left-out blocks = data-axo, which layout() treats as zero height and as non-neighbours (om/pv); real scene numbers are kept
+  with an inline counter-set. Watermark: no second system. axBegin swaps prefs.wm for a copy whose only recipient is aMark(id) (surname, or "P. Novak" for a
+  shared surname, same rule as aLabels) and adds a {name} layer when the user's layers have none; docPrefs() saves AXJ.wmSave, so the temporary one is never stored.
+  The title page "copy for" field follows it for free. File names: exportBaseName({cfg:axNameCfg(),actor,scope}); parts 'actor' and 'scope' (FN_ALL) are
+  empty in every other export; actor is always added, scope when "Both"; duplicates get " (2)". prefs.ax = {mode,hl,wm} is a UI pref (klapka.ui).
+  No actor contact details are ever written to a copy. A PDF is made by the print dialog, so each file asks for its own Save; "Stop" in the toast between jobs.
+  No Rust/config files changed.
+
+PDF INCLUDES (from index_25): XPR holds sheet-only choices for title page, watermark, header/footer, revision marks (missing = as in the script; never saved,
+  cleared by closeAll). The PDF button copies them to PRO; beforeprint prApply() puts them into prefs, afterprint prUndo() restores, docPrefs() keeps saving the
+  real values meanwhile (also while an actor export swaps the watermark). Ctrl+P / File > Print use the script settings. exPdfPreview() draws the real title page
+  (tpMini) and the total page count (title page and watermark copies included). The older file-name panel (fnPanel) is kept; the name card of index_25 is not ported.
+
+BRAND AND FIRST RUN: FEATHER_D / featherSvg(px,'draw') hold the supplied feather (mlx-ink-feather-teal.svg), drawn inline in the home bar (.brand), the home empty state,
+  the welcome screen and tutorial step 1; the favicon in <head> is the supplied app icon (mlx-ink-app-icon-updated.svg) as a data URI. First launch: openWelcome()
+  (language screen, only when prefs.ui is empty and prefs.langAsked is not set; choosing switches the interface at once) and then openTour(0). Both flags are UI prefs set
+  when the dialog opens, so each shows once. The tutorial (TOUR, tourVis, openTour) has eight steps, clickable dots, left/right keys, and an example-script button on the last.
+
 CHANGELOG (newest last; later steps append here)
   2026-10-13  Menu bar reorganised: File, Edit, Insert, Scenes, Format, View, Tools (was File + Tools with 11 nested groups); each command lives in one place
               (removed duplicates: Format, Title page, Front page, Header & footer, Cast of this scene, Rename character). Search box in Tools now covers all menus,
@@ -290,8 +311,18 @@ CHANGELOG (newest last; later steps append here)
               View > Element icons switches to words, animated (pop on select, swap on format change), styled tooltip engine (data-tip + data-k) showing name and shortcut. A new empty scene heading
               opens INT./EXT. suggestions at once. A "+ Cast" pill beside the heading of a scene without cast opens the cast dialog (nobody needs to speak). Font picker sample page is larger;
               Hollywood asks for confirmation before a non-typewriter font. File picker takes .mlxink (old .klapka names are still read). No Rust/config files changed.
+  2026-10-15  Actor sides (ported from index_22 into this build): per-actor export (full script marked / only their scenes / both), restrained highlight, watermark from the actor's surname (initial when shared),
+              several actors in one action, names via the file-naming system (new parts actor, scope). New pref prefs.ax (additive). No Rust/config files changed.
+  2026-10-15  PDF export: preview with the real title page and total page count; title page / watermark / header & footer / revisions are now switches for
+              this export only (the script is not changed). Ported from index_25. No Rust/config files changed.
+  2026-10-15  index_21: merge of index_20 (Actor sides, PDF preview and include switches) with the 2026-10-14 build (element bar icons, tooltips, + Cast pill, tour, update events).
+              Three-way merge against index_19, three overlaps (changelog, closeAll area, strings) kept both sides. No Rust/config files changed.
+  2026-10-16  First run asks for the interface language (English, Czech, German, Polish, Slovak), then shows the tutorial. Tutorial rebuilt: eight steps (new: characters and actors,
+              versions and safety), step counter, clickable dots, arrow keys, example-script button, all strings in cs/de/pl/sk. The MLX Ink feather (supplied artwork) now appears in the
+              home bar, home empty state, welcome screen and tutorial; the app icon is the favicon. No Rust/config files changed.
 -->
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Script</title></head><body>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Script</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22233%22%20height=%22226%22%20viewBox=%220%200%20233%20226%22%20role=%22img%22%20aria-labelledby=%22title%20desc%22%3E%3Ctitle%20id=%22title%22%3EMLX%20Ink%20app%20icon%3C/title%3E%3Cdesc%20id=%22desc%22%3ETeal%20angular%20feather%20on%20a%20dark%20rounded-square%20background%20with%20a%20subtle%20upper-left%20metallic%20gleam.%20The%20exterior%20corners%20are%20transparent.%3C/desc%3E%3Cdefs%3E%3CradialGradient%20id=%22background%22%20cx=%2243%25%22%20cy=%2229%25%22%20r=%2288%25%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23141516%22/%3E%3Cstop%20offset=%220.58%22%20stop-color=%22%230b0c0d%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23050606%22/%3E%3C/radialGradient%3E%3ClinearGradient%20id=%22edgeBase%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23777b7d%22/%3E%3Cstop%20offset=%220.10%22%20stop-color=%22%235b5f61%22/%3E%3Cstop%20offset=%220.25%22%20stop-color=%22%23292b2d%22/%3E%3Cstop%20offset=%220.68%22%20stop-color=%22%23202224%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23383a3c%22/%3E%3C/linearGradient%3E%3ClinearGradient%20id=%22featherTeal%22%20x1=%220.12%22%20y1=%220%22%20x2=%220.82%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%2300D9BD%22/%3E%3Cstop%20offset=%220.42%22%20stop-color=%22%2300BFA6%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%2300A98F%22/%3E%3C/linearGradient%3E%3CclipPath%20id=%22iconClip%22%3E%3Crect%20x=%2216.5%22%20y=%2212.5%22%20width=%22203%22%20height=%22198.5%22%20rx=%2244%22/%3E%3C/clipPath%3E%3C/defs%3E%3Crect%20x=%2216.5%22%20y=%2212.5%22%20width=%22203%22%20height=%22198.5%22%20rx=%2244%22%20fill=%22url(%23background)%22%20stroke=%22url(%23edgeBase)%22%20stroke-width=%221.8%22/%3E%3Cpath%20d=%22M%201004%20103%20L%20740%20293%20L%20592%20441%20L%20474%20651%20L%20292%201021%20L%20236%201140%20L%20385%20912%20L%20388%20903%20L%20469%20772%20L%20569%20622%20L%20674%20479%20L%20752%20380%20L%20810%20310%20L%20811%20312%20L%20713%20448%20L%20577%20645%20L%20437%20865%20L%20718%20670%20L%20796%20521%20L%20657%20578%20L%20651%20578%20L%20815%20485%20L%20909%20292%20Z%22%20transform=%22translate(31.4%2020)%20scale(0.145)%22%20fill=%22url(%23featherTeal)%22%20fill-rule=%22evenodd%22/%3E%3C/svg%3E">
+</head><body>
 <link rel="stylesheet" href="/src/fonts.css">
 <link rel="stylesheet" href="/src/fonts-script.css">
 <style>
@@ -724,6 +755,13 @@ select.fld{appearance:none;-webkit-appearance:none;padding-right:26px;background
 .xver{flex:1 0 100%}.xver .fld{max-width:200px;padding:3px 8px;font-size:12.5px}
 .xpdf{flex:1;border:1px dashed var(--line);border-radius:14px;padding:22px;display:grid;align-content:center;gap:6px;color:var(--fg-soft)}
 .xpdf b{color:var(--fg);font-size:24px;letter-spacing:-.02em}
+.xpdf{display:flex;flex-direction:row;align-items:center;gap:22px;padding:18px 22px;border:1px solid var(--line);border-radius:14px;background:transparent}
+.xpv-th{width:96px;flex:none;filter:drop-shadow(0 5px 14px rgba(0,0,0,.16))}
+.xpv-sc{aspect-ratio:1/1.32;background-color:var(--paper);border-radius:4px;box-shadow:inset 0 0 0 1px var(--line);background-image:repeating-linear-gradient(to bottom,transparent 0 9px,var(--line) 9px 10px);background-origin:content-box;background-clip:content-box;padding:12% 12%}
+.xpv-tx{display:grid;gap:7px;min-width:0;font-size:12.5px;line-height:1.5;color:var(--fg-soft)}
+.xpv-tx b{color:var(--fg);font-size:24px;letter-spacing:-.02em}
+.xpv-cs{display:flex;flex-wrap:wrap;gap:5px}
+.xpv-cs i{font-style:normal;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--seg);color:var(--fg)}
 .xhist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:6px}
 .hrow{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;animation:xin .2s var(--ease)}
 .hrow>div{flex:1;min-width:0}
@@ -1052,6 +1090,17 @@ select.fld{appearance:none;-webkit-appearance:none;padding-right:26px;background
 .bib-opts{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:8px}
 .bib-e{display:grid;place-items:center;text-align:center;color:var(--fg-soft);gap:6px;padding:40px 10px;flex:1}
 .bib-e b{color:var(--fg);font-size:15px}
+/* actor sides: the highlight exists only while an actor export prints (class .axh is added in beforeprint, removed in afterprint). A bar in the margin
+   reads in black and white; the tint is a light yellow or grey that stays readable when photocopied. */
+.el.axh{box-shadow:-4px 0 0 #1a1a1a;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.app.ax-yellow .el.axh{background:rgba(255,222,70,.45)}
+.app.ax-grey .el.axh{background:rgba(0,0,0,.08)}
+.axl{display:flex;flex-direction:column;gap:2px;max-height:230px;overflow:auto;margin:4px 0 6px;border:1px solid var(--line);border-radius:10px;padding:3px}
+.axr{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:13px}
+.axr:hover{background:var(--seg)}.axr.off{opacity:.5;cursor:default}.axr.off:hover{background:none}
+.axr>span{flex:1;min-width:0}.axr b{font-weight:600}.axr small{display:block;color:var(--fg-soft);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.axr em{font:600 11.5px var(--ui);font-style:normal;color:var(--fg-soft);letter-spacing:.02em}
+.axt{display:flex;gap:6px;margin:0 0 4px}.axn{font-size:12.5px;line-height:1.5;margin:6px 0 0}
 @media (max-width:700px){.bib{grid-template-columns:1fr}.bib-l ul{max-height:150px}.fmtcards{grid-template-columns:1fr}}
 
 /* ---- additions that the first build did not finish ---- */
@@ -1322,10 +1371,25 @@ select[data-dd]{display:none!important}
 .tv-mont{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:9px;background:var(--seg);font-weight:550;font-size:13px}
 .tv-k{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:var(--seg);font-size:13px;color:var(--fg-soft)}.tv-k .ks{display:flex;gap:3px}
 .tv-chip{padding:7px 14px;border-radius:9px;background:var(--seg);font-weight:550;font-size:13px;color:var(--fg-soft)}.tv-chip.on{background:var(--accent-soft);color:var(--accent)}
-.tdots{display:flex;gap:6px;justify-content:center;margin:16px 0}
-.tdots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:width .25s var(--ease),background .2s}
-.tdots i.on{width:18px;background:var(--accent)}
-.tnav{display:flex;gap:8px;align-items:center}.tnav .spacer{flex:1}
+.tnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.tnav .spacer{flex:1}.tnav .btn{white-space:nowrap}
+/* brand feather, first-run language screen, tutorial extras */
+.feather{display:block;fill:#00BFA6;flex:none}.brand .feather{fill:#00BFA6;width:24px;height:24px}
+.feather.draw path{stroke:#00BFA6;stroke-width:7;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;fill-opacity:0;animation:fthDraw 1.5s var(--ease) .2s forwards,fthFill .7s ease 1.2s forwards}
+@keyframes fthDraw{to{stroke-dashoffset:0}}@keyframes fthFill{to{fill-opacity:1}}
+.tv-logo{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background:radial-gradient(circle at 43% 29%,#141516,#0b0c0d 58%,#050606);box-shadow:inset 0 0 0 1.5px #3b3e40,0 10px 26px rgba(0,0,0,.22)}
+.tv-logo .feather{width:62px;height:62px;filter:drop-shadow(0 0 9px rgba(0,217,189,.22))}
+.hempty .feather{width:64px;height:64px}
+.wlc{padding:4px 20px 8px;text-align:center}.wlc .tv-logo{margin:0 auto;animation:tvIn .42s var(--ease) both}
+.wlc h3{margin:14px 0 2px;font-size:22px;letter-spacing:-.02em}.wlc .wl-sub{margin:0 0 14px;color:var(--fg-soft);font-size:14px}
+.wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left}.wl-grid .lgopt:last-child:nth-child(odd){grid-column:1/-1}
+.wlc .lgnote{text-align:center}
+.tv-card{display:grid;gap:2px;padding:9px 16px;border-radius:11px;background:var(--seg);text-align:left;min-width:134px;animation:emIn .4s var(--ease) both}.tv-card:nth-child(2){animation-delay:.09s}
+.tv-card b{font:650 13px var(--script);letter-spacing:.02em}.tv-card small{font-size:12px;color:var(--fg-soft)}
+.tv-vers{display:flex;align-items:center;gap:10px}.tv-vers span{padding:8px 14px;border-radius:10px;background:var(--seg);font-weight:550;font-size:13px;color:var(--fg-soft)}.tv-vers span.on{background:var(--accent-soft);color:var(--accent)}.tv-vers i{font-style:normal;color:var(--fg-soft)}
+.tdots{display:flex;gap:4px;justify-content:center;margin:14px 0 2px}
+.tdots .td{position:relative;width:6px;height:6px;padding:0;border:0;border-radius:3px;background:var(--line);cursor:pointer;transition:width .25s var(--ease),background .2s}
+.tdots .td::after{content:"";position:absolute;inset:-9px -3px}.tdots .td.on{width:18px;background:var(--accent)}
+.tcount{font-size:11.5px;color:var(--fg-soft);margin:0 0 14px;letter-spacing:.02em}
 </style>
 
 <div class="app" id="app">
@@ -1497,6 +1561,7 @@ const kindOf=w=>/^(MUSIC|HUDBA|MUSIK|MUZYKA)$/i.test(w)?'hudba':'zvuk';
 const cap=w=>w.charAt(0)+w.slice(1).toLowerCase();
 let PW=794,PH=1122,MT=96,MB=96,LH=18;
 let GAP=32,printing=false;
+let AXJ=null;   /* actor export job in progress (see ACTOR SIDES in the ARCHITECTURE NOTES); null = a normal print */
 const wmLayer=$('#wmLayer'),pageStyle=document.head.appendChild(document.createElement('style'));
 /* element types that do not exist in the active format are mapped to the nearest one */
 function fitType(t,x){
@@ -1907,11 +1972,15 @@ function layout(){
   /* clear what a previous print pass left on the blocks BEFORE measuring: a stale paddingTop/display would inflate (or zero) the heights
      and make a second beforeprint, or the layout after afterprint, add phantom pages */
   for(const b of bs){b.style.paddingTop='';b.style.breakBefore='';b.style.display='';b.style.removeProperty('--ptop')}
-  const H_=bs.map(b=>(printing&&HID(b.dataset.t))?0:b.offsetHeight),ty=bs.map(b=>b.dataset.t);
+  /* om[i]: block left out of an actor export ("only their scenes"). It takes no room and does not count as the neighbour of the next block;
+     pv[i] = the previous block that is really there */
+  const om=bs.map(b=>printing&&b.dataset.axo==='1');
+  const pv=[];{let l=-1;for(let i=0;i<n;i++){pv.push(l);if(!om[i])l=i}}
+  const H_=bs.map((b,i)=>(om[i]||(printing&&HID(b.dataset.t)))?0:b.offsetHeight),ty=bs.map(b=>b.dataset.t);
   const P=PH+GAP,CB=PH-MB;
   const base=i=>{
-    if(i===0||(printing&&HID(ty[i])))return 0;
-    const t=ty[i],p=ty[i-1];
+    if(om[i]||pv[i]<0||(printing&&HID(ty[i])))return 0;
+    const t=ty[i],p=ty[pv[i]];
     if((t==='paren'||t==='dialogue')&&(p==='character'||p==='paren'))return 0;
     if(t==='alt'&&(p==='dialogue'||p==='alt'))return 0;
     if(isHead(t))return 2*LH;
@@ -1922,6 +1991,7 @@ function layout(){
   let y=MT;const pos=[],margins=[],push=[];
   let dA=0,dIn=false;
   for(let i=0;i<n;i++){
+    if(om[i]){push.push(false);margins.push(0);pos.push({top:y,h:0});continue}
     if(dr[i]){
       if(ty[i]==='character'){let g=i-1;while(g>=0&&(ty[g]==='paren'||ty[g]==='dialogue'))g--;
         dA=y;dIn=true;const t0=pos[g].top;margins.push(t0-y);pos.push({top:t0,h:H_[i]});push.push(false);y=t0+H_[i];continue}
@@ -1933,13 +2003,13 @@ function layout(){
     let need=H_[i],j=i;
     while(keep(ty[j])&&j+1<n&&j-i<3){need+=base(j+1)+H_[j+1];j++}
     const pageTop=page*P+MT;
-    if(top>pageTop+1&&(top+need>page*P+CB||(F.sceneBreak&&i>0&&isHead(ty[i]))||(i>0&&ty[i-1]==='pagebreak'))){top=(page+1)*P+MT;m=top-y;pu=true}
+    if(top>pageTop+1&&(top+need>page*P+CB||(F.sceneBreak&&pv[i]>=0&&isHead(ty[i]))||(pv[i]>=0&&ty[pv[i]]==='pagebreak'))){top=(page+1)*P+MT;m=top-y;pu=true}
     push.push(pu);margins.push(m+gap);pos.push({top,h:H_[i]});
     y=top+H_[i];
   }
   if(dIn)y=Math.max(y,dA);
   bs.forEach((b,i)=>{
-    if(printing&&HID(b.dataset.t))b.style.display='none';
+    if(printing&&(om[i]||HID(b.dataset.t)))b.style.display='none';
     if(printing&&push[i]){const own=parseFloat(getComputedStyle(b).paddingTop)||0;b.style.marginTop='0';b.style.paddingTop=(MT+own)+'px';b.style.setProperty('--ptop',MT+'px');b.style.breakBefore='page'}
     else b.style.marginTop=margins[i]+'px';
   });
@@ -2591,6 +2661,9 @@ zoom:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.500 4.500M11 8.500v5M8.
 star:'<path d="m12 4 2.400 5 5.600.7-4.100 3.800 1.100 5.500L12 16.300 7 19l1.100-5.500L4 9.700 9.600 9z"/>',
 check2:'<circle cx="12" cy="12" r="8.500"/><path d="m8 12.500 3 3 5-6"/>'
 };
+/* ---------- brand: the MLX Ink feather (supplied artwork, mlx-ink-feather-teal.svg). featherSvg(px,'draw') draws it in, once, as it appears ---------- */
+const FEATHER_D='M 1004 103 L 740 293 L 592 441 L 474 651 L 292 1021 L 236 1140 L 385 912 L 388 903 L 469 772 L 569 622 L 674 479 L 752 380 L 810 310 L 811 312 L 713 448 L 577 645 L 437 865 L 718 670 L 796 521 L 657 578 L 651 578 L 815 485 L 909 292 Z';
+const featherSvg=(s,cls)=>'<svg class="feather'+(cls?' '+cls:'')+'" width="'+s+'" height="'+s+'" viewBox="85 86 1070 1070" aria-hidden="true" focusable="false"><path pathLength="1" fill-rule="evenodd" d="'+FEATHER_D+'"/></svg>';
 const ico=(n,s=18)=>'<svg class="i" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(IC[n]||'')+'</svg>';
 function fillIcons(root){(root||document).querySelectorAll('[data-ic]').forEach(e=>{if(!e.firstChild)e.innerHTML=ico(e.dataset.ic,+e.dataset.s||18)})}
 const uid=()=>Math.random().toString(36).slice(2,8);
@@ -2600,8 +2673,9 @@ const scrim=$('#scrim'),sheet=$('#sheet'),pal=$('#pal'),dlg=$('#dlg'),sheetText=
 let sheetTab='fountain',toastT=0;
 function toast(m){const t=$('#toast');t.innerHTML=ico('check',15)+'<span>'+esc(_(m))+'</span>';t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2000)}
 window.addEventListener('mlxink:update-downloading',()=>toast('Downloading update…'));
+window.addEventListener('mlxink:update-error',()=>toast('Update failed. Try again from the menu.'));
 window.addEventListener('mlxink:update-error',()=>toast('Could not check for updates'));
-function closeAll(){if(sheet.classList.contains('open')){EXSRC=null;exSel=null}sheet.classList.remove('open');pal.classList.remove('open');dlg.classList.remove('open');scrim.classList.remove('open');closeMenus();if(!prefs.lock)ed.focus()}
+function closeAll(){XPR={};if(sheet.classList.contains('open')){EXSRC=null;exSel=null}sheet.classList.remove('open');pal.classList.remove('open');dlg.classList.remove('open');scrim.classList.remove('open');closeMenus();if(!prefs.lock)ed.focus()}
 const anyOverlay=()=>sheet.classList.contains('open')||pal.classList.contains('open')||dlg.classList.contains('open');
 /* generic dialog: render(body, tab) fills the body; optional tabs and footer buttons */
 function showDlg(title,render,o={}){
@@ -2634,10 +2708,18 @@ let lastEx='pdf';
 const ex=()=>Object.assign({title:true,cast:true,nums:true,fa:true,notes:true},prefs.ex);
 const nn=n=>ex().nums?String(n).padStart(3,' ')+'  ':'';
 const tgl=(l,k)=>({l,get:()=>ex()[k],set:v=>{prefs.ex=Object.assign(ex(),{[k]:v});store()}});
+let XPR={};
+/* PDF include choices (front page, watermark, header/footer, revisions) belong to the sheet only: XPR holds a choice that differs from the script,
+   it is applied while printing (prApply) and dropped when the sheet closes. The script's own settings are never changed by it. */
+const XK={tp:()=>prefs.tp.on,wm:()=>prefs.wm.on,hf:()=>prefs.hf.on,rev:()=>prefs.rev.on};
+const exEff=k=>typeof XPR[k]==='boolean'?XPR[k]:!!XK[k]();
+const exSetPr=(k,v)=>{if(v===!!XK[k]())delete XPR[k];else XPR[k]=v};
+const hfHas=()=>['h','f'].some(z=>(prefs.hf[z]||[]).some(x=>String(x).trim()));
 const CTL={
-  pdf:[{l:'Title page',get:()=>prefs.tp.on,set:v=>{prefs.tp.on=v;applyPrefs()}},{l:'Scene numbers',adv:1,sel:['left','both','none'],get:()=>prefs.nums,set:v=>{prefs.nums=v;applyPrefs()}},{l:"(CONT'D)",adv:1,get:()=>prefs.cont!==false,set:v=>{prefs.cont=v;applyPrefs()}},
-    {l:'Revisions',get:()=>!!prefs.rev.on,set:v=>{prefs.rev.on=v;applyPrefs()}},
-    {l:'Watermark',ic:'layers',btn:()=>{closeAll();openDock()}},{l:'Header & footer',ic:'header',btn:()=>openHF()},{l:'Edit title page',ic:'edit',btn:()=>{closeAll();goTitle()}}],
+  pdf:[{l:'Title page',get:()=>exEff('tp'),set:v=>exSetPr('tp',v)},{l:'Scene numbers',adv:1,sel:['left','both','none'],get:()=>prefs.nums,set:v=>{prefs.nums=v;applyPrefs()}},{l:"(CONT'D)",adv:1,get:()=>prefs.cont!==false,set:v=>{prefs.cont=v;applyPrefs()}},
+    {l:'Revisions',get:()=>exEff('rev'),set:v=>exSetPr('rev',v)},
+    {l:'Watermark',get:()=>exEff('wm'),set:v=>exSetPr('wm',v)},{l:'Edit watermark…',ic:'layers',btn:()=>{closeAll();openDock()}},
+    {l:'Header & footer',get:()=>exEff('hf'),set:v=>exSetPr('hf',v)},{l:'Edit header & footer…',ic:'header',btn:()=>openHF()},{l:'Edit title page',ic:'edit',btn:()=>{closeAll();goTitle()}}],
   fountain:[tgl('Title page header','title'),tgl('Notes','notes'),tgl('Italic first appearances','fa')],fdx:[tgl('Title page','title'),tgl('Italic first appearances','fa')],
   text:[tgl('Title','title'),tgl('Scene numbers','nums'),tgl('Cast lines','cast')],csv:[],project:[]};
 function verPicker(tab){
@@ -2673,18 +2755,18 @@ async function exportAllVersions(tab){
   toast(_('saved')+' · '+n);
 }
 function fnSave(c){prefs.fn=c;store()}
-function fnPanel(tab){
-  const wrap=document.createElement('div');wrap.className='fnp';
+function fnPanel(tab,opt){
+  opt=opt||{};const wrap=document.createElement('div');wrap.className='fnp';
   const ext=tab==='pdf'?'.pdf':EXT[tab]||'';
   const c=fnCfg(),pv=document.createElement('div');pv.className='fnpv';
-  const upd=()=>{pv.textContent=exportFileName(ext);pv.title=pv.textContent};
+  const upd=()=>{pv.textContent=opt.name?opt.name():exportFileName(ext);pv.title=pv.textContent};
   const head=document.createElement('div');head.className='fnh';head.append(Object.assign(document.createElement('span'),{className:'lab',textContent:_('File name')}),pv);wrap.append(head);
   const det=document.createElement('details');det.className='fnd';
   det.append(Object.assign(document.createElement('summary'),{textContent:_('Customise name')}));
   const body=document.createElement('div');body.className='fnb';
   const chips=document.createElement('div');chips.className='fnc';
   const draw=()=>{chips.replaceChildren();const cc=fnCfg();
-    FN_PARTS.forEach(k=>{const b=document.createElement('button');b.type='button';const on=cc.parts.includes(k);b.className='fnchip';b.setAttribute('aria-pressed',String(on));
+    (opt.act?FN_ALL:FN_PARTS).forEach(k=>{const b=document.createElement('button');b.type='button';const on=cc.parts.includes(k);b.className='fnchip';b.setAttribute('aria-pressed',String(on));
       b.textContent=(on?cc.parts.indexOf(k)+1+' · ':'')+_(FN_LABEL[k]);
       b.onclick=()=>{const n=fnCfg();n.parts=on?n.parts.filter(x=>x!==k):n.parts.concat(k);fnSave(n);draw();upd()};chips.append(b)})};
   draw();
@@ -2697,7 +2779,7 @@ function fnPanel(tab){
     b.onclick=()=>{const n=fnCfg();n.ascii=v;fnSave(n);dg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));upd()};dg.append(b)});
   const ci=document.createElement('input');ci.type='text';ci.className='fld';ci.spellcheck=false;ci.value=c.custom||'';ci.placeholder='{project} – {doc} {version}';
   ci.oninput=()=>{const n=fnCfg();n.custom=ci.value;fnSave(n);upd()};
-  const rs=document.createElement('button');rs.type='button';rs.className='xbtn';rs.textContent=_('Reset');rs.onclick=()=>{fnSave(undefined);prefs.fn=undefined;store();openSheet(tab)};
+  const rs=document.createElement('button');rs.type='button';rs.className='xbtn';rs.textContent=_('Reset');rs.onclick=()=>{fnSave(undefined);prefs.fn=undefined;store();if(opt.redo)opt.redo();else openSheet(tab)};
   body.append(row('Parts, in order',chips),row('Separator',sg),row('Letters',dg),row('Or a pattern',ci),rs);
   det.append(body);wrap.append(det);upd();return wrap;
 }
@@ -2716,6 +2798,16 @@ function renderSet(tab){
   if(adv.length){const d=document.createElement('details');d.className='fnd xadv';d.append(Object.assign(document.createElement('summary'),{textContent:_('More options')}));const b=document.createElement('div');b.className='xset';b.style.marginTop='8px';adv.forEach(h=>b.append(h));d.append(b);box.append(d)}
   if(tab==='pdf'||EXT[tab])box.append(fnPanel(tab));
 }
+/* PDF preview: what the printed file will contain, with the real front page layout */
+function exPdfPreview(){
+  const eTp=exEff('tp'),eWm=exEff('wm')&&prefs.wm.layers.length>0,nm=wmNames().length,cp=eWm&&nm>1?nm:1,total=cp*(pagesN+(eTp?1:0));
+  const inc=[_(F.name)+' \u00b7 '+F.size];
+  if(eTp)inc.push(_('Front page'));
+  if(eWm)inc.push(cp>1?_('watermark on {n} copies',{n:cp}):_('Watermark'));
+  if(exEff('hf')&&hfHas())inc.push(_('Header & footer'));
+  if(prefs.rev.on&&exEff('rev'))inc.push(_('{name} revision',{name:_(REVC[prefs.rev.round%REVC.length][0])}));
+  $('#xpdf').innerHTML='<div class="xpv-th">'+(eTp?tpMini(tpPre(),true):'<div class="xpv-sc"></div>')+'</div><div class="xpv-tx"><b>'+esc(_n('page',total))+'</b><span class="xpv-cs">'+inc.map(t=>'<i>'+esc(t)+'</i>').join('')+'</span><span>'+esc(_('Print opens your browser dialog: choose “Save as PDF”.'))+' '+esc(_('The file name above is suggested.'))+'</span><span>'+esc(_('Prints the working copy. To print an older version, restore it first.'))+'</span></div>';
+}
 function openSheet(tab){
   commit();pal.classList.remove('open');dlg.classList.remove('open');closeMenus();
   if(tab==='save')tab=lastEx;
@@ -2730,7 +2822,7 @@ function openSheet(tab){
   $('#btnImport').hidden=!imp;$('#btnFile').hidden=!imp;
   sheetText.hidden=pdf||hist;$('#xpdf').hidden=!pdf;$('#xhist').hidden=!hist;sheetText.readOnly=!imp;sheetText.placeholder='';
   renderSet(tab);let note=NOTE[tab]||'';
-  if(pdf){const n=prefs.wm.on?Math.max(1,prefs.wm.recips.length):0;$('#xpdf').innerHTML='<b>'+_n('page',pagesN)+'</b><span>'+esc(_(F.name))+' · '+F.size+' · '+esc(prefs.tp.on?_('with title page'):_('no title page'))+(prefs.wm.on?' · '+esc(n>1?_('watermark on {n} copies',{n:n}):_('watermark')):'')+(prefs.rev.on?' · '+esc(_('{name} revision',{name:_(REVC[prefs.rev.round%REVC.length][0])})):'')+'</span><span>'+esc(_('Print opens your browser dialog: choose “Save as PDF”.'))+'</span>';note='Print works in the saved .html file, not the hosted preview.'}
+  if(pdf){exPdfPreview();note='Print works in the saved .html file, not the hosted preview.'}
   else if(hist){renderHist();note='Snapshots stay on this device. Restoring saves the current script first, so you can always come back.'}
   else if(tab==='project')sheetText.value=toProject();
   else if(tab==='fdx')sheetText.value=toFdx();
@@ -3036,7 +3128,7 @@ fF.addEventListener('input',()=>{fi=0;paintFind(true)});
 fF.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();stepFind(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();closeFind()}});
 fR.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();replaceOne()}else if(e.key==='Escape'){e.preventDefault();closeFind()}});
 $('#fbNext').onclick=()=>stepFind(1);$('#fbPrev').onclick=()=>stepFind(-1);$('#fbOne').onclick=replaceOne;$('#fbAll').onclick=replaceAll;$('#fbX').onclick=closeFind;
-$('#btnPdf').onclick=()=>{closeAll();setTimeout(printScript,150)};
+$('#btnPdf').onclick=()=>{PRO=Object.assign({},XPR);closeAll();setTimeout(printScript,150)};
 function loadBlocks(b,title,quiet){
   if(!quiet&&ed.children.length)addSnap('Before replace');
   titleEl.value=title||'';renderTp();
@@ -3131,7 +3223,7 @@ function MENU_VIEW(){return[
   {l:'Audio column',s:()=>!prefs.hide.a,f:()=>toggleCol('a'),when:()=>F.cols,keep:1}]}
 function MENU_TOOLS(){return[
   {hd:'Characters'},
-  {l:'Character profiles…',ic:'users',d:'Age, look, voice, background',f:()=>openBible()},{l:'Add character…',ic:'plus',f:()=>addCharDlg(false)},{l:'Rename character…',ic:'edit',d:'Cues and names in the text',f:()=>renameChar()},
+  {l:'Character profiles…',ic:'users',d:'Age, look, voice, background',f:()=>openBible()},{l:'Add character…',ic:'plus',f:()=>addCharDlg(false)},{l:'Export actor sides…',ic:'users',d:'Marked script per actor, with a watermark',f:()=>openActorExport()},{l:'Rename character…',ic:'edit',d:'Cues and names in the text',f:()=>renameChar()},
   {l:'Italic first appearance',s:()=>prefs.fa!==false,f:toggleFA,keep:1},{l:'Clear highlight',ic:'eye',when:()=>!!prefs.hl,f:()=>toggleHL(prefs.hl)},{sep:1},
   {l:'Reports',ic:'chart',sub:()=>[
     {l:'Script report',ic:'chart',f:()=>openReport('over')},{l:'Characters',ic:'users',f:()=>openReport('chars')},{l:'Locations',ic:'pin',f:()=>openReport('locs')},{l:'Interactions',ic:'users',f:()=>openReport('rel')},{l:'Story structure',ic:'flag',f:()=>openReport('struct')}]},
@@ -3266,8 +3358,23 @@ Object.assign(STR.de,{"Alternatives": "Alternativen", "Search all menus…": "Al
 Object.assign(STR.pl,{"Alternatives": "Alternatywy", "Search all menus…": "Szukaj we wszystkich menu…", "Menu": "Menu"});
 Object.assign(STR.sk,{"Alternatives": "Alternatívy", "Search all menus…": "Hľadať vo všetkých ponukách…", "Menu": "Ponuka"});
 Object.assign(PLUR,{"cs": {"page": {"one": "{n} strana", "few": "{n} strany", "many": "{n} strany", "other": "{n} stran"}, "scene": {"one": "{n} scéna", "few": "{n} scény", "many": "{n} scény", "other": "{n} scén"}, "word": {"one": "{n} slovo", "few": "{n} slova", "many": "{n} slova", "other": "{n} slov"}, "script": {"one": "{n} scénář", "few": "{n} scénáře", "many": "{n} scénáře", "other": "{n} scénářů"}, "version": {"one": "{n} verze", "few": "{n} verze", "many": "{n} verze", "other": "{n} verzí"}, "cue": {"one": "{n} replika", "few": "{n} repliky", "many": "{n} repliky", "other": "{n} replik"}, "replacement": {"one": "{n} nahrazení", "few": "{n} nahrazení", "many": "{n} nahrazení", "other": "{n} nahrazení"}, "day": {"one": "před {n} dnem", "few": "před {n} dny", "many": "před {n} dny", "other": "před {n} dny"}, "layers": {"one": "{n} vrstva", "few": "{n} vrstvy", "many": "{n} vrstvy", "other": "{n} vrstev"}, "copies": {"one": "{n} kopie", "few": "{n} kopie", "many": "{n} kopie", "other": "{n} kopií"}, "unchanged": {"one": "Beze změny: {n} blok", "few": "Beze změny: {n} bloky", "many": "Beze změny: {n} bloky", "other": "Beze změny: {n} bloků"}, "dialogueword": {"one": "{n} slovo dialogu", "few": "{n} slova dialogu", "many": "{n} slova dialogu", "other": "{n} slov dialogu"}}, "de": {"page": {"one": "{n} Seite", "other": "{n} Seiten"}, "scene": {"one": "{n} Szene", "other": "{n} Szenen"}, "word": {"one": "{n} Wort", "other": "{n} Wörter"}, "script": {"one": "{n} Drehbuch", "other": "{n} Drehbücher"}, "version": {"one": "{n} Version", "other": "{n} Versionen"}, "cue": {"one": "{n} Replik", "other": "{n} Repliken"}, "day": {"one": "vor {n} Tag", "other": "vor {n} Tagen"}}, "pl": {"page": {"one": "{n} strona", "few": "{n} strony", "many": "{n} stron", "other": "{n} strony"}, "scene": {"one": "{n} scena", "few": "{n} sceny", "many": "{n} scen", "other": "{n} sceny"}, "word": {"one": "{n} słowo", "few": "{n} słowa", "many": "{n} słów", "other": "{n} słowa"}, "script": {"one": "{n} scenariusz", "few": "{n} scenariusze", "many": "{n} scenariuszy", "other": "{n} scenariusza"}, "version": {"one": "{n} wersja", "few": "{n} wersje", "many": "{n} wersji", "other": "{n} wersji"}, "day": {"one": "{n} dzień temu", "few": "{n} dni temu", "many": "{n} dni temu", "other": "{n} dnia temu"}}, "sk": {"page": {"one": "{n} strana", "few": "{n} strany", "many": "{n} strany", "other": "{n} strán"}, "scene": {"one": "{n} scéna", "few": "{n} scény", "many": "{n} scény", "other": "{n} scén"}, "word": {"one": "{n} slovo", "few": "{n} slová", "many": "{n} slova", "other": "{n} slov"}, "script": {"one": "{n} scenár", "few": "{n} scenáre", "many": "{n} scenára", "other": "{n} scenárov"}, "version": {"one": "{n} verzia", "few": "{n} verzie", "many": "{n} verzie", "other": "{n} verzií"}, "day": {"one": "pred {n} dňom", "few": "pred {n} dňami", "many": "pred {n} dňami", "other": "pred {n} dňami"}}});
+/* actor sides strings */
+Object.assign(STR.cs,{"Actor sides": "Role pro herce", "Export actor sides…": "Exportovat role pro herce…", "Export sides…": "Exportovat role…", "Marked script per actor, with a watermark": "Označený scénář pro každého herce, s vodoznakem", "Actors": "Herci", "Select all": "Vybrat vše", "None": "Žádní", "What to export": "Co exportovat", "Full script": "Celý scénář", "Their scenes": "Jejich scény", "Both": "Obojí", "The whole script, with this actor’s lines marked.": "Celý scénář s označenými replikami tohoto herce.", "Only the scenes this actor is in, with the original scene numbers.": "Jen scény, ve kterých herec hraje, s původními čísly scén.", "Two files per actor: the whole script and their scenes.": "Dva soubory na herce: celý scénář a jeho scény.", "Highlight": "Zvýraznění", "Soft yellow": "Jemně žluté", "Grey": "Šedé", "Margin bar only": "Jen proužek v okraji", "A bar in the margin marks each line, so it also reads in black and white.": "Proužek v okraji označuje každý řádek, takže je vidět i černobíle.", "Watermark with the actor’s name": "Vodoznak se jménem herce", "Surname only; a shared surname gets the first initial. Your own watermark layers stay as they are.": "Jen příjmení; při shodě příjmení se přidá iniciála křestního jména. Vaše vlastní vrstvy vodoznaku zůstanou, jak jsou.", "The script is never changed: highlights and watermarks exist only in the files. No contact details are included.": "Scénář se nikdy nemění: zvýraznění a vodoznaky existují jen v souborech. Žádné kontaktní údaje nejsou zahrnuty.", "No character linked": "Není propojená žádná postava", "Not in the script": "Ve scénáři není", "Export": "Exportovat", "Choose at least one actor": "Vyberte alespoň jednoho herce", "Nothing to export for these actors": "Pro tyto herce není co exportovat", "Add the actors in the character hub and link each one to the characters they play. Then each actor gets a copy of their own.": "Přidejte herce v centru postav a propojte každého s postavami, které hraje. Každý herec pak dostane vlastní kopii.", "{done} of {n} · next: {name}": "{done} z {n} · další: {name}", "Stop": "Zastavit", "Actor sides: {n}": "Role pro herce: {n}", "left out, not in the script: {names}": "vynecháno, není ve scénáři: {names}", "Actor": "Herec", "Scope": "Rozsah"});
+Object.assign(STR.de,{"Actor sides": "Rollen für Schauspieler", "Export actor sides…": "Schauspieler-Auszüge exportieren…", "Export sides…": "Auszüge exportieren…", "Marked script per actor, with a watermark": "Markiertes Skript je Schauspieler, mit Wasserzeichen", "Actors": "Schauspieler", "Select all": "Alle wählen", "None": "Keine", "What to export": "Was exportieren", "Full script": "Ganzes Skript", "Their scenes": "Ihre Szenen", "Both": "Beides", "The whole script, with this actor’s lines marked.": "Das ganze Skript, die Zeilen dieses Schauspielers markiert.", "Only the scenes this actor is in, with the original scene numbers.": "Nur die Szenen dieses Schauspielers, mit den ursprünglichen Szenennummern.", "Two files per actor: the whole script and their scenes.": "Zwei Dateien je Schauspieler: das ganze Skript und seine Szenen.", "Highlight": "Hervorhebung", "Soft yellow": "Zartes Gelb", "Grey": "Grau", "Margin bar only": "Nur Randbalken", "A bar in the margin marks each line, so it also reads in black and white.": "Ein Balken am Rand markiert jede Zeile, so ist sie auch in Schwarzweiß lesbar.", "Watermark with the actor’s name": "Wasserzeichen mit dem Namen des Schauspielers", "Surname only; a shared surname gets the first initial. Your own watermark layers stay as they are.": "Nur der Nachname; bei gleichem Nachnamen kommt der Anfangsbuchstabe des Vornamens dazu. Deine eigenen Wasserzeichen-Ebenen bleiben unverändert.", "The script is never changed: highlights and watermarks exist only in the files. No contact details are included.": "Das Skript wird nie verändert: Hervorhebungen und Wasserzeichen gibt es nur in den Dateien. Kontaktdaten sind nicht enthalten.", "No character linked": "Keine Figur verknüpft", "Not in the script": "Nicht im Skript", "Export": "Exportieren", "Choose at least one actor": "Wähle mindestens einen Schauspieler", "Nothing to export for these actors": "Für diese Schauspieler gibt es nichts zu exportieren", "Add the actors in the character hub and link each one to the characters they play. Then each actor gets a copy of their own.": "Lege die Schauspieler im Figuren-Hub an und verknüpfe jeden mit seinen Figuren. Dann bekommt jeder eine eigene Kopie.", "{done} of {n} · next: {name}": "{done} von {n} · als Nächstes: {name}", "Stop": "Stopp", "Actor sides: {n}": "Schauspieler-Auszüge: {n}", "left out, not in the script: {names}": "ausgelassen, nicht im Skript: {names}", "Actor": "Schauspieler", "Scope": "Umfang"});
+Object.assign(STR.pl,{"Actor sides": "Role dla aktorów", "Export actor sides…": "Eksportuj role aktorów…", "Export sides…": "Eksportuj role…", "Marked script per actor, with a watermark": "Oznaczony scenariusz dla każdego aktora, ze znakiem wodnym", "Actors": "Aktorzy", "Select all": "Zaznacz wszystko", "None": "Żadne", "What to export": "Co eksportować", "Full script": "Cały scenariusz", "Their scenes": "Ich sceny", "Both": "Oba", "The whole script, with this actor’s lines marked.": "Cały scenariusz z oznaczonymi kwestiami tego aktora.", "Only the scenes this actor is in, with the original scene numbers.": "Tylko sceny, w których gra aktor, z oryginalnymi numerami scen.", "Two files per actor: the whole script and their scenes.": "Dwa pliki na aktora: cały scenariusz i jego sceny.", "Highlight": "Wyróżnienie", "Soft yellow": "Jasnożółte", "Grey": "Szare", "Margin bar only": "Tylko pasek na marginesie", "A bar in the margin marks each line, so it also reads in black and white.": "Pasek na marginesie oznacza każdy wiersz, więc widać go też w czerni i bieli.", "Watermark with the actor’s name": "Znak wodny z nazwiskiem aktora", "Surname only; a shared surname gets the first initial. Your own watermark layers stay as they are.": "Tylko nazwisko; przy takim samym nazwisku dodawana jest inicjał imienia. Twoje warstwy znaku wodnego pozostają bez zmian.", "The script is never changed: highlights and watermarks exist only in the files. No contact details are included.": "Scenariusz nigdy się nie zmienia: wyróżnienia i znaki wodne istnieją tylko w plikach. Nie dołączamy danych kontaktowych.", "No character linked": "Brak powiązanej postaci", "Not in the script": "Nie ma w scenariuszu", "Export": "Eksportuj", "Choose at least one actor": "Wybierz co najmniej jednego aktora", "Nothing to export for these actors": "Dla tych aktorów nie ma nic do eksportu", "Add the actors in the character hub and link each one to the characters they play. Then each actor gets a copy of their own.": "Dodaj aktorów w centrum postaci i powiąż każdego z postaciami, które gra. Wtedy każdy dostanie własną kopię.", "{done} of {n} · next: {name}": "{done} z {n} · dalej: {name}", "Stop": "Zatrzymaj", "Actor sides: {n}": "Role aktorów: {n}", "left out, not in the script: {names}": "pominięto, brak w scenariuszu: {names}", "Actor": "Aktor", "Scope": "Zakres"});
+Object.assign(STR.sk,{"Actor sides": "Roly pre hercov", "Export actor sides…": "Exportovať roly hercov…", "Export sides…": "Exportovať roly…", "Marked script per actor, with a watermark": "Označený scenár pre každého herca, s vodoznakom", "Actors": "Herci", "Select all": "Vybrať všetko", "None": "Žiadni", "What to export": "Čo exportovať", "Full script": "Celý scenár", "Their scenes": "Ich scény", "Both": "Oboje", "The whole script, with this actor’s lines marked.": "Celý scenár s označenými replikami tohto herca.", "Only the scenes this actor is in, with the original scene numbers.": "Iba scény, v ktorých herec hrá, s pôvodnými číslami scén.", "Two files per actor: the whole script and their scenes.": "Dva súbory na herca: celý scenár a jeho scény.", "Highlight": "Zvýraznenie", "Soft yellow": "Jemne žlté", "Grey": "Sivé", "Margin bar only": "Iba pásik v okraji", "A bar in the margin marks each line, so it also reads in black and white.": "Pásik v okraji označuje každý riadok, takže je vidieť aj čiernobielo.", "Watermark with the actor’s name": "Vodoznak s menom herca", "Surname only; a shared surname gets the first initial. Your own watermark layers stay as they are.": "Iba priezvisko; pri zhode priezviska sa pridá iniciálka mena. Vaše vlastné vrstvy vodoznaku zostanú, ako sú.", "The script is never changed: highlights and watermarks exist only in the files. No contact details are included.": "Scenár sa nikdy nemení: zvýraznenia a vodoznaky existujú iba v súboroch. Kontaktné údaje nie sú zahrnuté.", "No character linked": "Nie je prepojená žiadna postava", "Not in the script": "V scenári nie je", "Export": "Exportovať", "Choose at least one actor": "Vyberte aspoň jedného herca", "Nothing to export for these actors": "Pre týchto hercov nie je čo exportovať", "Add the actors in the character hub and link each one to the characters they play. Then each actor gets a copy of their own.": "Pridajte hercov v centre postáv a prepojte každého s postavami, ktoré hrá. Každý herec potom dostane vlastnú kópiu.", "{done} of {n} · next: {name}": "{done} z {n} · ďalej: {name}", "Stop": "Zastaviť", "Actor sides: {n}": "Roly hercov: {n}", "left out, not in the script: {names}": "vynechané, nie je v scenári: {names}", "Actor": "Herec", "Scope": "Rozsah"});
+/* export sheet strings (PDF preview and include switches) */
+Object.assign(STR.cs,{"Edit header & footer…":"Upravit záhlaví a zápatí…","The file name above is suggested.":"Výše uvedený název dialog nabídne.","Prints the working copy. To print an older version, restore it first.":"Tiskne pracovní kopii. Starší verzi nejdřív obnovte."});
+Object.assign(STR.de,{"Edit header & footer…":"Kopf- und Fußzeile bearbeiten…","The file name above is suggested.":"Der Dateiname oben wird vorgeschlagen.","Prints the working copy. To print an older version, restore it first.":"Druckt die Arbeitskopie. Eine ältere Version zuerst wiederherstellen."});
+Object.assign(STR.pl,{"Edit header & footer…":"Edytuj nagłówek i stopkę…","The file name above is suggested.":"Powyższa nazwa pliku jest sugerowana.","Prints the working copy. To print an older version, restore it first.":"Drukuje kopię roboczą. Starszą wersję najpierw przywróć."});
+Object.assign(STR.sk,{"Edit header & footer…":"Upraviť hlavičku a pätu…","The file name above is suggested.":"Vyššie uvedený názov súboru sa ponúka.","Prints the working copy. To print an older version, restore it first.":"Tlačí pracovnú kópiu. Staršiu verziu najprv obnovte."});
 Object.assign(STR.cs,{"Quick tour":"Rychlý průvodce","Tutorial":"Návod","A quick tour of the basics":"Rychlý průvodce základy","Welcome to MLX Ink":"Vítejte v MLX Ink","Pick the element":"Vyberte prvek","Scene headings":"Hlavičky scén","Cast and montage":"Obsazení a montáž","Find anything":"Najděte cokoli","Format and export":"Formát a export","Skip":"Přeskočit","Back":"Zpět","Next":"Další","Close":"Zavřít","Start writing":"Začít psát","Write your screenplay straight on the page. Everything saves on this device as you type.":"Pište scénář přímo na stránku. Vše se průběžně ukládá v tomto zařízení.","The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.":"Lišta nad stránkou určuje, čím je aktuální řádek. Po najetí na ikonu uvidíte název a zkratku. Tab přepíná prvky a Enter začne další řádek.","A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.":"Nová scéna hned nabídne INT. nebo EXT. Vyberte šipkami a Enterem, pak napište místo.","People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.":"Mluvící postavy se najdou automaticky. Ostatní přidáte tlačítkem Přidat obsazení vedle hlavičky scény. Tlačítko Montáž zahájí sekvenci záběrů.","Search every command and scene from one box, and open the Navigator to jump between scenes.":"Hledejte všechny příkazy a scény z jednoho pole a pomocí Navigátoru přeskakujte mezi scénami.","Choose Hollywood, European or TV at the top right. Export from the File menu. You can reopen this tutorial from Tools > Tutorial.":"Vpravo nahoře zvolte Hollywood, Evropský nebo TV formát. Export najdete v nabídce Soubor. Návod znovu otevřete v Nástroje > Návod."});
 Object.assign(STR.cs,{"Element icons":"Ikony prvků","Icons in the element bar. Switch off for words.":"Ikony v liště prvků. Vypnutím se zobrazí slova.","Add cast":"Přidat postavy","Change the Hollywood font?":"Změnit hollywoodské písmo?","Hollywood scripts are traditionally set in Courier, a typewriter font. At 10 characters per inch one page is about one minute of screen time, and readers, agents and competitions expect it. Some of them may not accept a different font.":"Hollywoodské scénáře se tradičně sázejí písmem Courier (strojopis). Při 10 znacích na palec odpovídá strana zhruba minutě filmu a čtenáři, agenti i soutěže to očekávají. Někteří z nich jiné písmo nepřijmou.","Your text never changes, and you can switch back at any time.":"Text se nikdy nezmění a kdykoli se můžete vrátit.","Go back":"Zpět","Use {f} anyway":"Přesto použít {f}"});
+/* first-run language screen and tutorial strings */
+Object.assign(STR.cs,{"Welcome": "Vítejte", "Choose your language": "Vyberte jazyk", "You can change this later with the globe on the home screen.": "Později to změníte glóbusem na úvodní obrazovce.", "Characters and actors": "Postavy a herci", "Versions and safety": "Verze a bezpečí", "Try the example script": "Vyzkoušet ukázku", "Step {n} of {m}": "Krok {n} z {m}", "Characters appear in the side panel once they speak. Open Character profiles to add details and the actor, then use Export actor sides… for a marked script per actor.": "Postavy se objeví v postranním panelu, jakmile promluví. V Profilech postav doplníte podrobnosti i herce a pomocí Exportovat role pro herce… získáte označený scénář pro každého z nich.", "New version freezes the current draft and lets you carry on in a copy. Compare any two and restore an old one as a new version. Nothing is overwritten.": "Nová verze zmrazí aktuální podobu a vy pokračujete v kopii. Libovolné dvě verze porovnáte a starší obnovíte jako novou verzi. Nic se nepřepisuje.", "Choose Hollywood, European or TV at the top right. Export from the File menu: PDF with a live preview, Fountain, Final Draft, plain text, a scene list or a full backup. Reopen this tutorial from Tools > Tutorial.": "Vpravo nahoře zvolte Hollywood, Evropský nebo TV formát. Exportujte v nabídce Soubor: PDF s živým náhledem, Fountain, Final Draft, prostý text, seznam scén nebo celou zálohu. Návod znovu otevřete v Nástroje > Návod."});
+Object.assign(STR.de,{"Quick tour": "Kurzführung", "Tutorial": "Anleitung", "A quick tour of the basics": "Eine kurze Einführung in die Grundlagen", "Welcome to MLX Ink": "Willkommen bei MLX Ink", "Pick the element": "Element wählen", "Scene headings": "Szenenüberschriften", "Cast and montage": "Besetzung und Montage", "Characters and actors": "Figuren und Schauspieler", "Versions and safety": "Versionen und Sicherheit", "Find anything": "Alles finden", "Format and export": "Format und Export", "Skip": "Überspringen", "Back": "Zurück", "Next": "Weiter", "Close": "Schließen", "Start writing": "Losschreiben", "Try the example script": "Beispiel ausprobieren", "Step {n} of {m}": "Schritt {n} von {m}", "Welcome": "Willkommen", "Choose your language": "Sprache wählen", "You can change this later with the globe on the home screen.": "Das lässt sich später über den Globus auf dem Startbildschirm ändern.", "Write your screenplay straight on the page. Everything saves on this device as you type.": "Schreibe dein Drehbuch direkt auf der Seite. Alles wird beim Tippen auf diesem Gerät gespeichert.", "The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.": "Die Leiste über der Seite legt fest, was die aktuelle Zeile ist. Fahre über ein Symbol, um Name und Kürzel zu sehen. Tab wechselt durch die Elemente, Enter beginnt die nächste Zeile.", "A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.": "Eine neue Szene schlägt sofort INT. oder EXT. vor. Wähle mit den Pfeiltasten und Enter, dann tippe den Ort.", "People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.": "Sprechende Figuren werden automatisch erkannt. Für alle anderen nutze die Schaltfläche Besetzung hinzufügen neben der Szenenüberschrift. Die Schaltfläche Montage startet eine Bildfolge.", "Characters appear in the side panel once they speak. Open Character profiles to add details and the actor, then use Export actor sides… for a marked script per actor.": "Figuren erscheinen im Seitenbereich, sobald sie sprechen. Öffne die Figurenprofile, um Details und den Schauspieler zu ergänzen, und nutze dann Schauspieler-Auszüge exportieren… für ein markiertes Drehbuch je Schauspieler.", "New version freezes the current draft and lets you carry on in a copy. Compare any two and restore an old one as a new version. Nothing is overwritten.": "Neue Version friert den aktuellen Stand ein und du schreibst in einer Kopie weiter. Vergleiche zwei beliebige Versionen und stelle eine ältere als neue Version wieder her. Nichts wird überschrieben.", "Search every command and scene from one box, and open the Navigator to jump between scenes.": "Durchsuche alle Befehle und Szenen in einem Feld und öffne den Navigator, um zwischen Szenen zu springen.", "Choose Hollywood, European or TV at the top right. Export from the File menu: PDF with a live preview, Fountain, Final Draft, plain text, a scene list or a full backup. Reopen this tutorial from Tools > Tutorial.": "Wähle oben rechts Hollywood, Europäisch oder TV. Exportiere über das Menü Datei: PDF mit Live-Vorschau, Fountain, Final Draft, reinen Text, eine Szenenliste oder eine vollständige Sicherung. Diese Anleitung öffnest du wieder unter Werkzeuge > Anleitung."});
+Object.assign(STR.pl,{"Quick tour": "Szybki przewodnik", "Tutorial": "Samouczek", "A quick tour of the basics": "Krótkie wprowadzenie do podstaw", "Welcome to MLX Ink": "Witamy w MLX Ink", "Pick the element": "Wybierz element", "Scene headings": "Nagłówki scen", "Cast and montage": "Obsada i montaż", "Characters and actors": "Postacie i aktorzy", "Versions and safety": "Wersje i bezpieczeństwo", "Find anything": "Znajdź wszystko", "Format and export": "Format i eksport", "Skip": "Pomiń", "Back": "Wstecz", "Next": "Dalej", "Close": "Zamknij", "Start writing": "Zacznij pisać", "Try the example script": "Wypróbuj przykład", "Step {n} of {m}": "Krok {n} z {m}", "Welcome": "Witamy", "Choose your language": "Wybierz język", "You can change this later with the globe on the home screen.": "Możesz to później zmienić globusem na ekranie głównym.", "Write your screenplay straight on the page. Everything saves on this device as you type.": "Pisz scenariusz prosto na stronie. Wszystko zapisuje się na tym urządzeniu w trakcie pisania.", "The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.": "Pasek nad stroną określa, czym jest bieżący wiersz. Najedź na ikonę, aby zobaczyć nazwę i skrót. Tab przełącza elementy, a Enter zaczyna kolejny wiersz.", "A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.": "Nowa scena od razu podpowiada INT. lub EXT. Wybierz strzałkami i Enterem, a potem wpisz miejsce.", "People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.": "Mówiące postacie są wykrywane automatycznie. Pozostałe dodasz przyciskiem Dodaj obsadę obok nagłówka sceny. Przycisk Montaż rozpoczyna sekwencję ujęć.", "Characters appear in the side panel once they speak. Open Character profiles to add details and the actor, then use Export actor sides… for a marked script per actor.": "Postacie pojawiają się w panelu bocznym, gdy tylko się odezwą. Otwórz profile postaci, aby dodać szczegóły i aktora, a następnie użyj Eksportuj role aktorów…, by dostać oznaczony scenariusz dla każdego aktora.", "New version freezes the current draft and lets you carry on in a copy. Compare any two and restore an old one as a new version. Nothing is overwritten.": "Nowa wersja zamraża bieżący stan, a Ty piszesz dalej w kopii. Porównaj dowolne dwie wersje i przywróć starszą jako nową wersję. Nic nie jest nadpisywane.", "Search every command and scene from one box, and open the Navigator to jump between scenes.": "Przeszukuj wszystkie polecenia i sceny z jednego pola, a Nawigatorem przeskakuj między scenami.", "Choose Hollywood, European or TV at the top right. Export from the File menu: PDF with a live preview, Fountain, Final Draft, plain text, a scene list or a full backup. Reopen this tutorial from Tools > Tutorial.": "Wybierz w prawym górnym rogu format Hollywood, Europejski lub TV. Eksportuj z menu Plik: PDF z podglądem na żywo, Fountain, Final Draft, zwykły tekst, listę scen lub pełną kopię zapasową. Ten samouczek otworzysz ponownie w Narzędzia > Samouczek."});
+Object.assign(STR.sk,{"Quick tour": "Rýchly sprievodca", "Tutorial": "Návod", "A quick tour of the basics": "Rýchly sprievodca základmi", "Welcome to MLX Ink": "Vitajte v MLX Ink", "Pick the element": "Vyberte prvok", "Scene headings": "Hlavičky scén", "Cast and montage": "Obsadenie a montáž", "Characters and actors": "Postavy a herci", "Versions and safety": "Verzie a bezpečnosť", "Find anything": "Nájdite čokoľvek", "Format and export": "Formát a export", "Skip": "Preskočiť", "Back": "Späť", "Next": "Ďalej", "Close": "Zavrieť", "Start writing": "Začať písať", "Try the example script": "Vyskúšať ukážku", "Step {n} of {m}": "Krok {n} z {m}", "Welcome": "Vitajte", "Choose your language": "Vyberte jazyk", "You can change this later with the globe on the home screen.": "Neskôr to zmeníte glóbusom na úvodnej obrazovke.", "Write your screenplay straight on the page. Everything saves on this device as you type.": "Píšte scenár priamo na stranu. Všetko sa priebežne ukladá v tomto zariadení.", "The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.": "Lišta nad stranou určuje, čím je aktuálny riadok. Po prejdení myšou na ikonu uvidíte názov a skratku. Tab prepína prvky a Enter začne ďalší riadok.", "A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.": "Nová scéna hneď ponúkne INT. alebo EXT. Vyberte šípkami a Enterom, potom napíšte miesto.", "People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.": "Hovoriace postavy sa nájdu automaticky. Ostatné pridáte tlačidlom Pridať obsadenie vedľa hlavičky scény. Tlačidlo Montáž začne sekvenciu záberov.", "Characters appear in the side panel once they speak. Open Character profiles to add details and the actor, then use Export actor sides… for a marked script per actor.": "Postavy sa objavia v bočnom paneli, hneď ako prehovoria. V profiloch postáv doplníte podrobnosti aj herca a pomocou Exportovať roly hercov… získate označený scenár pre každého z nich.", "New version freezes the current draft and lets you carry on in a copy. Compare any two and restore an old one as a new version. Nothing is overwritten.": "Nová verzia zmrazí aktuálnu podobu a vy pokračujete v kópii. Porovnáte ľubovoľné dve verzie a staršiu obnovíte ako novú verziu. Nič sa neprepisuje.", "Search every command and scene from one box, and open the Navigator to jump between scenes.": "Hľadajte všetky príkazy a scény z jedného poľa a pomocou Navigátora preskakujte medzi scénami.", "Choose Hollywood, European or TV at the top right. Export from the File menu: PDF with a live preview, Fountain, Final Draft, plain text, a scene list or a full backup. Reopen this tutorial from Tools > Tutorial.": "Vpravo hore zvoľte Hollywood, Európsky alebo TV formát. Exportujte v ponuke Súbor: PDF so živým náhľadom, Fountain, Final Draft, obyčajný text, zoznam scén alebo úplnú zálohu. Tento návod znovu otvoríte v Nástroje > Návod."});
 /* ---------- interface language: switching, picker ---------- */
 function refreshUi(){
   try{statsHtml='';navSig='';after()}catch(e){}
@@ -3788,36 +3895,67 @@ function doPlaceCastPill(){
 $('#castPill').addEventListener('mousedown',e=>e.preventDefault());
 $('#castPill').addEventListener('click',()=>{const i=+$('#castPill').dataset.i;if(ed.children[i])openCastDlg(i)});
 
-/* ---------- first-run tutorial: six short steps. prefs.toured (UI pref) is set when it opens, so it shows once; reopen from Tools, Home > More or the palette ---------- */
+/* ---------- first run: language screen (openWelcome, once, only when no language was ever chosen), then the tutorial (eight short steps).
+   prefs.langAsked and prefs.toured (UI prefs) are set when each opens, so each shows once; reopen the tutorial from Tools, Home > More or the palette ---------- */
 const TOUR=[
- {ic:'film',t:'Welcome to MLX Ink',b:'Write your screenplay straight on the page. Everything saves on this device as you type.',v:'brand'},
- {ic:'type',t:'Pick the element',b:'The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.',v:'seg'},
- {ic:'hash',t:'Scene headings',b:'A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.',v:'sug'},
- {ic:'users',t:'Cast and montage',b:'People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.',v:'cast'},
- {ic:'search',t:'Find anything',b:'Search every command and scene from one box, and open the Navigator to jump between scenes.',v:'find'},
- {ic:'doc',t:'Format and export',b:'Choose Hollywood, European or TV at the top right. Export from the File menu. You can reopen this tutorial from Tools > Tutorial.',v:'fmt'}];
+ {t:'Welcome to MLX Ink',b:'Write your screenplay straight on the page. Everything saves on this device as you type.',v:'brand'},
+ {t:'Pick the element',b:'The bar above the page sets what the current line is. Hover an icon for its name and shortcut. Tab cycles through the elements, and Enter starts the next line.',v:'seg'},
+ {t:'Scene headings',b:'A new scene suggests INT. or EXT. right away. Choose with the arrow keys and Enter, then type the place.',v:'sug'},
+ {t:'Cast and montage',b:'People who speak are found automatically. For anyone else, use the Add cast button beside the scene heading. The Montage button starts a sequence of shots.',v:'cast'},
+ {t:'Characters and actors',b:'Characters appear in the side panel once they speak. Open Character profiles to add details and the actor, then use Export actor sides… for a marked script per actor.',v:'actors'},
+ {t:'Versions and safety',b:'New version freezes the current draft and lets you carry on in a copy. Compare any two and restore an old one as a new version. Nothing is overwritten.',v:'ver'},
+ {t:'Find anything',b:'Search every command and scene from one box, and open the Navigator to jump between scenes.',v:'find'},
+ {t:'Format and export',b:'Choose Hollywood, European or TV at the top right. Export from the File menu: PDF with a live preview, Fountain, Final Draft, plain text, a scene list or a full backup. Reopen this tutorial from Tools > Tutorial.',v:'fmt'}];
 function tourVis(v){
-  if(v==='brand')return '<div class="tv-brand">'+ico('film',34)+'</div>';
+  if(v==='brand')return '<div class="tv-logo">'+featherSvg(62,'draw')+'</div>';
   if(v==='seg'){const key=F.id==='av'?'av':'std',lab=elLabels();return '<div class="tv-seg">'+SEG_SV[key].map((x,i)=>'<span style="--i:'+i+'">'+x+'<small>'+esc(lab[i])+'</small></span>').join('')+'</div><div class="tv-keys">'+keysHtml(keyOf('t1'))+'<i>…</i>'+keysHtml(keyOf('t6'))+'</div>'}
   if(v==='sug')return '<div class="tv-sug"><div class="tv-head">INT.<i></i></div><div class="tv-list"><b class="on">INT.</b><b>EXT.</b><b>INT./EXT.</b></div></div>';
   if(v==='cast')return '<div class="tv-row"><span class="castpill tv-pill">＋ '+esc(_('Add cast'))+'</span><span class="tv-mont">'+ico('film',15)+'<span>'+esc(_('Montage'))+'</span></span></div>';
+  if(v==='actors')return '<div class="tv-row"><div class="tv-card"><b>ADÉLA</b><small>Jana Nováková</small></div><div class="tv-card"><b>JAKUB</b><small>Petr Dvořák</small></div></div><div class="tv-row" style="margin-top:10px"><span class="tv-mont">'+ico('users',15)+'<span>'+esc(_('Export sides…'))+'</span></span></div>';
+  if(v==='ver')return '<div class="tv-vers"><span>'+esc(_('Version'))+' 1</span><i>→</i><span class="on">'+esc(_('Version'))+' 2</span></div><div class="tv-keys" style="justify-content:center">'+keysHtml(keyOf('saveVer'))+'</div>';
   if(v==='find')return '<div class="tv-row"><span class="tv-k">'+keysHtml(keyOf('palette'))+'<span>'+esc(_('Search'))+'</span></span><span class="tv-k">'+keysHtml(keyOf('nav'))+'<span>'+esc(_('Navigator'))+'</span></span></div>';
   return '<div class="tv-row">'+Object.values(FORMATS).map(f=>'<span class="tv-chip'+(f.id===F.id?' on':'')+'">'+esc(f.name)+'</span>').join('')+'</div>';
 }
 function openTour(at){
   prefs.toured=true;try{lsSet(UIK,uiPrefs())}catch(e){}
-  let i=Math.max(0,Math.min(TOUR.length-1,at|0));
+  const N=TOUR.length;let i=Math.max(0,Math.min(N-1,at|0));
+  const example=()=>{closeAll();try{const p=newProject({title:SAMPLE_TITLE,logline:SAMPLE_LOGLINE,blocks:fitFor(SAMPLE,'eu'),format:'eu'});if(homeOpen())hideHome();openProject(p.id)}catch(e){}};
   const draw=db=>{
-    const s=TOUR[i],last=i===TOUR.length-1;
+    const s=TOUR[i],last=i===N-1;
     db.innerHTML='<div class="tour"><div class="tv" key="'+i+'">'+tourVis(s.v)+'</div><h3>'+esc(_(s.t))+'</h3><p>'+esc(_(s.b))+'</p>'
-      +'<div class="tdots">'+TOUR.map((_x,j)=>'<i class="'+(j===i?'on':'')+'"></i>').join('')+'</div>'
+      +'<div class="tdots">'+TOUR.map((_x,j)=>'<button type="button" class="td'+(j===i?' on':'')+'" data-j="'+j+'" aria-label="'+esc(_('Step {n} of {m}',{n:j+1,m:N}))+'"></button>').join('')+'</div>'
+      +'<div class="tcount">'+esc(_('Step {n} of {m}',{n:i+1,m:N}))+'</div>'
       +'<div class="tnav"><button type="button" class="btn ghost" data-a="skip">'+esc(_(last?'Close':'Skip'))+'</button><span class="spacer"></span>'
       +(i?'<button type="button" class="btn ghost" data-a="back">'+esc(_('Back'))+'</button>':'')
+      +(last?'<button type="button" class="btn ghost" data-a="example">'+esc(_('Try the example script'))+'</button>':'')
       +'<button type="button" class="btn" data-a="next">'+esc(_(last?'Start writing':'Next'))+'</button></div></div>';
-    db.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==='skip'||(a==='next'&&last)){closeAll();return}i+=a==='next'?1:-1;draw(db)});
+    db.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==='skip'||(a==='next'&&last)){closeAll();return}if(a==='example'){example();return}i+=a==='next'?1:-1;draw(db)});
+    db.querySelectorAll('.td').forEach(b=>b.onclick=()=>{i=+b.dataset.j;draw(db)});
     const nx=db.querySelector('[data-a=next]');if(nx)nx.focus({preventScroll:true});
   };
-  showDlg('Quick tour',draw,{w:520});
+  showDlg('Quick tour',draw,{w:540});
+  const dbx=dlg.querySelector('.db');
+  if(dbx)dbx.onkeydown=e=>{if(e.key==='ArrowRight'&&i<N-1){e.preventDefault();i++;draw(dbx)}else if(e.key==='ArrowLeft'&&i>0){e.preventDefault();i--;draw(dbx)}};
+}
+function openWelcome(){
+  prefs.langAsked=true;try{lsSet(UIK,uiPrefs())}catch(e){}
+  let pick=uiCode();
+  const draw=db=>{
+    const part=!(langOf(pick)&&langOf(pick).base);
+    db.innerHTML='<div class="wlc"><div class="tv-logo">'+featherSvg(62,'draw')+'</div><h3>MLX Ink</h3><p class="wl-sub">'+esc(_('Choose your language'))+'</p>'
+      +'<div class="wl-grid" role="radiogroup">'+LANGS.map(l=>'<button type="button" class="lgopt'+(l.c===pick?' on':'')+'" role="radio" aria-checked="'+(l.c===pick)+'" data-c="'+l.c+'"><b>'+esc(l.n)+'</b>'+(l.c===pick?ico('check',16):'')+'</button>').join('')+'</div>'
+      +(part?'<p class="muted lgnote">'+esc(_('These languages are partly translated. Anything missing appears in English.'))+'</p>':'')
+      +'<p class="muted lgnote">'+esc(_('You can change this later with the globe on the home screen.'))+'</p></div>';
+    db.querySelectorAll('.lgopt').forEach(b=>b.onclick=()=>{
+      pick=b.dataset.c;setUiLang(pick);
+      const h=dlg.querySelector('.dh b');if(h)h.textContent=_('Welcome');const f=dlg.querySelector('.df .btn');if(f)f.textContent=_('Continue');
+      draw(db);const on=db.querySelector('.lgopt.on');if(on)on.focus({preventScroll:true});
+    });
+  };
+  showDlg('Welcome',draw,{w:480,foot:[[_('Continue'),()=>openTour(0)]]});
+  const dbx=dlg.querySelector('.db');
+  if(dbx)dbx.onkeydown=e=>{if(!/^Arrow(Up|Down|Left|Right)$/.test(e.key))return;const o=[...dbx.querySelectorAll('.lgopt')];let j=o.findIndex(x=>x===document.activeElement);if(j<0)j=o.findIndex(x=>x.classList.contains('on'));j=(j+(e.key==='ArrowDown'||e.key==='ArrowRight'?1:-1)+o.length)%o.length;e.preventDefault();o[j].click()};
+  const on=dlg.querySelector('.lgopt.on');if(on)on.focus({preventScroll:true});
 }
 /* ---------- styled tooltips: any element with data-tip (name) and optional data-k (shortcut, e.g. "Alt 1") ---------- */
 const tipEl=document.createElement('div');tipEl.className='tip';tipEl.setAttribute('role','tooltip');document.body.appendChild(tipEl);
@@ -4363,10 +4501,12 @@ titleEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ed
    exportFileName(ext,ctx) adds an extension. Every export (PDF title, btnDl, project file, version .fountain) goes through it. */
 const FN_RESERVED=/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
 const FN_PARTS=['project','doc','version','author','date','lang'];
-const FN_LABEL={project:'Project',doc:'Document',version:'Version',author:'Author',date:'Date',lang:'Language'};
+const FN_LABEL={project:'Project',doc:'Document',version:'Version',author:'Author',date:'Date',lang:'Language',actor:'Actor',scope:'Scope'};
+const FN_ACT=['actor','scope'];   /* only meaningful for actor sides: empty (and left out) in every other export */
+const FN_ALL=[...FN_PARTS,...FN_ACT];
 const FN_SEPS=[' – ',' - ','_','-',' '];
 const FN_DEF=()=>({parts:['project','doc','version'],sep:' – ',ascii:false,custom:''});
-const fnCfg=c=>{const d=FN_DEF(),o=Object.assign(d,c||(prefs&&prefs.fn)||{});if(!Array.isArray(o.parts))o.parts=d.parts;o.parts=o.parts.filter(p=>FN_PARTS.includes(p));return o};
+const fnCfg=c=>{const d=FN_DEF(),o=Object.assign(d,c||(prefs&&prefs.fn)||{});if(!Array.isArray(o.parts))o.parts=d.parts;o.parts=o.parts.filter(p=>FN_ALL.includes(p));return o};
 const FN_MAP={ł:'l',Ł:'L',đ:'d',Đ:'D',ø:'o',Ø:'O',ß:'ss',æ:'ae',Æ:'AE',œ:'oe',Œ:'OE',þ:'th',ð:'d'};
 function fnAscii(s){return String(s).replace(/[łŁđĐøØßæÆœŒþð]/g,c=>FN_MAP[c]).normalize('NFD').replace(/[̀-ͯ]/g,'')}
 function safeFileName(s,max,ascii){
@@ -4381,7 +4521,7 @@ function fnValues(ctx){
   const dt=new Date(),p2=n=>String(n).padStart(2,'0');
   return{project:(ctx.title||exTitle().trim()||(P&&P.title)||'Untitled script').trim(),doc:d,version:(v||'').trim(),
     author:(ctx.author!==undefined?ctx.author:(prefs.tp&&prefs.tp.author)||'').trim(),date:dt.getFullYear()+'-'+p2(dt.getMonth()+1)+'-'+p2(dt.getDate()),
-    lang:(ctx.lang||vocabLang()).toUpperCase()};
+    lang:(ctx.lang||vocabLang()).toUpperCase(),actor:(ctx.actor||'').trim(),scope:(ctx.scope||'').trim()};
 }
 function exportBaseName(ctx){
   const c=fnCfg(ctx&&ctx.cfg),val=fnValues(ctx);let out;
@@ -4393,17 +4533,19 @@ const exportFileName=(ext,ctx)=>exportBaseName(ctx)+(ext||'');
 /* ---------- print (webview print in the desktop build, browser print in a plain browser) ----------
    The print dialog proposes the page title as the file name, so the title is swapped for the export name while printing.
    beforeprint/afterprint cover every route (button, File menu, Ctrl+P); printScript() sets it a moment earlier for the two in-app routes. */
-let titleBeforePrint=null;
-function titleForPrint(){if(titleBeforePrint===null)titleBeforePrint=document.title;document.title=exportBaseName()}
+let titleBeforePrint=null,PRO=null,prOrig=null;
+function titleForPrint(){if(titleBeforePrint===null)titleBeforePrint=document.title;document.title=AXJ&&AXJ.file?AXJ.file:exportBaseName()}
 function titleRestore(){if(titleBeforePrint!==null){document.title=titleBeforePrint;titleBeforePrint=null}}
+function prApply(){if(!PRO||prOrig)return;prOrig={tp:prefs.tp.on,wm:prefs.wm.on,hf:prefs.hf.on,rev:prefs.rev.on};['tp','wm','hf','rev'].forEach(k=>{if(typeof PRO[k]==='boolean')prefs[k].on=PRO[k]})}
+function prUndo(){if(!prOrig)return;prefs.tp.on=prOrig.tp;prefs.wm.on=prOrig.wm;prefs.hf.on=prOrig.hf;prefs.rev.on=prOrig.rev;prOrig=null}
 function printScript(){
   renderTp();titleForPrint();
-  try{window.print()}catch(e){titleRestore();toast('Printing is not available here')}
+  try{window.print()}catch(e){PRO=null;titleRestore();toast('Printing is not available here')}
 }
 function dropTp(){fit.querySelectorAll('.tpage').forEach(e=>e.remove())}
 function addTp(){if(prefs.tp.on)fit.querySelectorAll('.copy').forEach(c=>{const t=tpEl(false,c.dataset.n);fillWmTitle(t,c.dataset.n,+c.dataset.i,wmNames().length);c.before(t)})}
-window.addEventListener('beforeprint',()=>{titleForPrint();renderTp();printing=true;GAP=0;dropCopies();dropTp();layout();makeCopies();addTp()});
-window.addEventListener('afterprint',()=>{titleRestore();dropCopies();dropTp();printing=false;GAP=32;layout();after()});
+window.addEventListener('beforeprint',()=>{titleForPrint();if(AXJ)axBegin();prApply();renderTp();printing=true;GAP=0;dropCopies();dropTp();if(AXJ)axBegin();layout();makeCopies();addTp()});
+window.addEventListener('afterprint',()=>{titleRestore();dropCopies();dropTp();prUndo();PRO=null;try{renderTp()}catch(e){}printing=false;GAP=32;if(AXJ)axEnd();layout();after();if(AXJ&&AXJ.fin)AXJ.fin()});
 new ResizeObserver(()=>fitScale()).observe(canvas);
 
 
@@ -4706,7 +4848,10 @@ function retireLegacy(){
 const clone=o=>o===undefined?undefined:JSON.parse(JSON.stringify(o));
 function quota(){const n=Date.now();if(n-quotaT<8000)return;quotaT=n;toast('Browser storage is full. Download a project file from the home screen.')}
 const docDefaults=()=>({format:'eu',font:'',nums:'left',divider:false,wm:normWm({}),hf:{on:false,skip:true,h:['','',''],f:['','','']},rev:{on:false,round:1,base:[],date:''},hide:{v:false,a:false,h:false},cont:true,shots:undefined,autocast:undefined,lang:'',ex:undefined,lock:false,lim:{on:false,n:0,by:'words'},fa:true,intro:{caps:true,age:true,ital:false},vocab:'',vterm:{},fn:undefined,tp:{on:true,credit:'',creditAuto:true,author:'',source:'',draft:'',contact:'',version:''}});
-function docPrefs(){const o={};DOCK_.forEach(k=>{if(prefs[k]!==undefined)o[k]=prefs[k]});return clone(o)}
+function docPrefs(){const o={};DOCK_.forEach(k=>{const v=(k==='wm'&&AXJ&&AXJ.wmSave)?AXJ.wmSave:prefs[k];if(v!==undefined)o[k]=v});const r=clone(o);
+  /* while a print runs with its own include choices (prApply) the saved script keeps its real settings */
+  if(prOrig){if(r.tp)r.tp.on=prOrig.tp;if(r.wm&&!(AXJ&&AXJ.wmSave))r.wm.on=prOrig.wm;if(r.hf)r.hf.on=prOrig.hf;if(r.rev)r.rev.on=prOrig.rev}
+  return r}
 function uiPrefs(){const o={};for(const k in prefs)if(!DOCK_.includes(k))o[k]=prefs[k];return o}
 function applyDocPrefs(dp){
   Object.assign(prefs,docDefaults(),clone(dp||{}));
@@ -4854,14 +4999,14 @@ function renderHome(){
   const cont=$('#hCont');cont.hidden=!canWrite();if(canWrite())cont.textContent=_('Continue: {name}',{name:dispTitle(P.title.length>22?P.title.slice(0,21)+'…':P.title)});
   if(!items.length){
     hBody.innerHTML=hTab==='trash'?'<div class="hempty"><b>Trash is empty</b><span>Scripts you delete wait here until you remove them for good.</span></div>':hq.value.trim()?'<div class="hempty"><b>'+esc(_('No scripts match “{q}”',{q:hq.value.trim()}))+'</b><span>'+esc(_('Try a title, a word from the logline or an author.'))+'</span></div>':
-      '<div class="hempty">'+ico('film',34)+'<b>Your first script starts here</b><span>Pick a format, give it a title and a logline, and write.</span><button class="btn" data-a="new">New script</button></div>';
+      '<div class="hempty">'+featherSvg(64,'draw')+'<b>Your first script starts here</b><span>Pick a format, give it a title and a logline, and write.</span><button class="btn" data-a="new">New script</button></div>';
     return;
   }
   if(list){
     hBody.innerHTML='<div class="hlist"><div class="hlh"><span>Title</span><span>Format</span><span>Pages</span><span>Vers.</span><span>Edited</span><span></span></div>'+items.map(m=>'<div class="prow" tabindex="0" data-id="'+m.id+'" style="--pcol:'+pcol(m)+'"><div class="pn2"><b><i></i>'+esc(dispTitle(m.title))+(m.pin?'<span style="color:var(--accent);display:grid">'+ico('star',13)+'</span>':'')+'</b><span>'+esc(m.logline||_('No logline yet'))+'</span></div><span>'+esc(fmtShort(m.format))+'</span><span>'+(m.pages?m.pages:'—')+'</span><span>'+m.vers+'</span><span>'+ago(m.updated)+'</span><button class="pc-more" data-pm data-a="more" aria-label="More" aria-haspopup="menu">'+ico('more',16)+'</button></div>').join('')+'</div>';
     return;
   }
-  hBody.innerHTML='<div class="hgrid">'+(hTab==='all'&&!hq.value.trim()?'<div class="pc pc-new" tabindex="0" data-a="new" role="button" aria-label="New script"><div class="pc-sheet">'+ico('plus',30)+'</div><div class="pc-name">New script</div></div>':'')+items.map((m,i)=>'<div class="pc'+(m.trashed?' trash':'')+'" tabindex="0" role="button" data-id="'+m.id+'" style="--pcol:'+pcol(m)+';animation-delay:'+Math.min(i,10)*24+'ms"><div class="pc-sheet">'+(m.pin?'<span class="pc-pin">'+ico('star',14)+'</span>':'')+'<div class="pc-t">'+esc(dispTitle(m.title))+'</div>'+(m.author?'<div class="pc-a">'+esc(m.author)+'</div>':'')+'<button class="pc-more" data-pm data-a="more" aria-label="More" aria-haspopup="menu">'+ico('more',16)+'</button></div><div class="pc-name">'+esc(dispTitle(m.title))+'</div>'+(m.trashed?'':'<div class="pc-log'+(m.logline?'':' none')+'">'+esc(m.logline||_('No logline yet'))+'</div>')+'<div class="pc-meta"><span>'+esc(fmtShort(m.format))+'</span><span class="sep">·</span><span>'+(m.pages?_n('page',m.pages):_n('word',m.words))+'</span>'+(m.vers>1?'<span class="sep">·</span><span>'+_n('version',m.vers)+'</span>':'')+'<span class="sep">·</span><span>'+ago(m.updated)+'</span></div></div>').join('')+'</div>';
+  hBody.innerHTML='<div class="hgrid">'+(hTab==='all'&&!hq.value.trim()?'<div class="pc pc-new" tabindex="0" data-a="new" role="button" aria-label="New script"><div class="pc-sheet">'+ico('plus',30)+'</div><div class="pc-name">'+esc(_('New script'))+'</div></div>':'')+items.map((m,i)=>'<div class="pc'+(m.trashed?' trash':'')+'" tabindex="0" role="button" data-id="'+m.id+'" style="--pcol:'+pcol(m)+';animation-delay:'+Math.min(i,10)*24+'ms"><div class="pc-sheet">'+(m.pin?'<span class="pc-pin">'+ico('star',14)+'</span>':'')+'<div class="pc-t">'+esc(dispTitle(m.title))+'</div>'+(m.author?'<div class="pc-a">'+esc(m.author)+'</div>':'')+'<button class="pc-more" data-pm data-a="more" aria-label="More" aria-haspopup="menu">'+ico('more',16)+'</button></div><div class="pc-name">'+esc(dispTitle(m.title))+'</div>'+(m.trashed?'':'<div class="pc-log'+(m.logline?'':' none')+'">'+esc(m.logline||_('No logline yet'))+'</div>')+'<div class="pc-meta"><span>'+esc(fmtShort(m.format))+'</span><span class="sep">·</span><span>'+(m.pages?_n('page',m.pages):_n('word',m.words))+'</span>'+(m.vers>1?'<span class="sep">·</span><span>'+_n('version',m.vers)+'</span>':'')+'<span class="sep">·</span><span>'+ago(m.updated)+'</span></div></div>').join('')+'</div>';
 }
 /* menus on cards */
 function popMenu(items,anchor,x,y){
@@ -5011,7 +5156,7 @@ $('#hNew').onclick=openNew;$('#hCont').onclick=hideHome;$('#hImp').onclick=()=>$
 $('#hFile').onchange=e=>{importFile(e.target.files[0]);e.target.value=''};
 $('#hMore').onclick=e=>{
   if(menuBtn===e.currentTarget){closeMenus();return}
-  popMenu([{l:'Open last script on launch',s:()=>!!prefs.resume,f:()=>{prefs.resume=!prefs.resume;lsSet(UIK,uiPrefs())},keep:1},{sep:1},{l:'Add example script',ic:'film',f:()=>{const p=newProject({title:SAMPLE_TITLE,logline:SAMPLE_LOGLINE,blocks:fitFor(SAMPLE,'eu'),format:'eu'});renderHome();toast('Example added')}},{l:'Empty Trash…',ic:'trash',when:()=>IDX.items.some(x=>x.trashed),f:emptyTrash},{sep:1},{l:'Check for Updates…',ic:'download',f:async()=>{if(!window.mlxDesktop){toast('Updates are available in the desktop app');return}try{const result=await window.mlxDesktop.checkForUpdates();if(result==='up-to-date')toast('MLX Ink is up to date');else if(result==='declined')toast('Update postponed')}catch(err){console.error('MLX Ink: update check failed',err);toast('Could not check for updates')} }},{sep:1},{l:'Language…',ic:'globe',d:'Interface language',f:openLangDlg},{l:'Keyboard shortcuts',ic:'keyboard',f:openKeys},{l:'Tutorial',ic:'info',f:()=>openTour(0)}],e.currentTarget);
+  popMenu([{l:'Open last script on launch',s:()=>!!prefs.resume,f:()=>{prefs.resume=!prefs.resume;lsSet(UIK,uiPrefs())},keep:1},{sep:1},{l:'Add example script',ic:'film',f:()=>{const p=newProject({title:SAMPLE_TITLE,logline:SAMPLE_LOGLINE,blocks:fitFor(SAMPLE,'eu'),format:'eu'});renderHome();toast('Example added')}},{l:'Empty Trash…',ic:'trash',when:()=>IDX.items.some(x=>x.trashed),f:emptyTrash},{sep:1},{l:'Check for Updates…',ic:'download',f:async()=>{if(!window.mlxDesktop){toast('Updates are available in the desktop app');return}try{const result=await window.mlxDesktop.checkForUpdates();if(result==='up-to-date')toast('MLX Ink is up to date')}catch(err){console.error('MLX Ink: update check failed',err);toast('Could not check for updates')} }},{sep:1},{l:'Language…',ic:'globe',d:'Interface language',f:openLangDlg},{l:'Keyboard shortcuts',ic:'keyboard',f:openKeys},{l:'Tutorial',ic:'info',f:()=>openTour(0)}],e.currentTarget);
 };
 hBody.addEventListener('click',e=>{
   const act=e.target.closest('[data-a]'),card=e.target.closest('[data-id]');
@@ -5552,12 +5697,12 @@ function openBible(sel,tab0){
   const w=k=>A.get(k)?A.get(k).words:0;
   const names=()=>chKeys().filter(k=>!q||k.toLowerCase().includes(q)).sort(so==='az'?(a,b)=>a.localeCompare(b):so==='first'?(a,b)=>(firstIdx(a)<0?1e9:firstIdx(a))-(firstIdx(b)<0?1e9:firstIdx(b)):(a,b)=>w(b)-w(a)||a.localeCompare(b));
   showDlg('Characters',db=>{
-    db.innerHTML='<div class="bib"><div class="bib-l"><div class="bib-tabs"><button type="button" data-t="c">Characters</button><button type="button" data-t="a">Actors</button></div><input class="fld" id="bbQ" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search"><button type="button" class="bib-sg" data-t="s" id="bbSg"></button><button type="button" class="btn ghost sm" id="bbSort" data-a="sort">Most dialogue</button><ul id="bbL"></ul><button type="button" class="btn ghost sm" id="bbAdd" data-a="add"></button></div><div class="bib-f" id="bbF"></div></div>';
+    db.innerHTML='<div class="bib"><div class="bib-l"><div class="bib-tabs"><button type="button" data-t="c">Characters</button><button type="button" data-t="a">Actors</button></div><input class="fld" id="bbQ" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search"><button type="button" class="bib-sg" data-t="s" id="bbSg"></button><button type="button" class="btn ghost sm" id="bbSort" data-a="sort">Most dialogue</button><ul id="bbL"></ul><button type="button" class="btn ghost sm" id="bbAdd" data-a="add"></button><button type="button" class="btn ghost sm" id="bbEx" data-a="axp"></button></div><div class="bib-f" id="bbF"></div></div>';
     const L=$('#bbL'),Fm=$('#bbF');
     const chrome=()=>{
       db.querySelectorAll('.bib-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===(tab==='a'?'a':'c')));
       const n=sugCount(),sg=$('#bbSg');sg.hidden=!n&&tab!=='s';sg.classList.toggle('on',tab==='s');sg.textContent=_n('suggestion',n);
-      $('#bbSort').hidden=tab==='a';$('#bbAdd').innerHTML=ico('plus',14)+_(tab==='a'?'Add actor':'Add character');
+      $('#bbSort').hidden=tab==='a';$('#bbAdd').innerHTML=ico('plus',14)+_(tab==='a'?'Add actor':'Add character');$('#bbEx').innerHTML=ico('users',14)+_('Export actor sides…');
     };
     const list=()=>{
       if(tab==='a'){const lb=aLabels(),as=Object.values(actorMap()).filter(a=>!q||lb[a.id].toLowerCase().includes(q)).sort((x,y)=>lb[x.id].localeCompare(lb[y.id]));
@@ -5595,7 +5740,7 @@ function openBible(sel,tab0){
       const lb=aLabels(),f=(k,l,ph)=>'<span class="lab">'+_(l)+'</span><input class="fld" data-ak="'+k+'" value="'+esc(a[k]||'')+'" placeholder="'+(ph||'')+'" autocomplete="off">';
       Fm.innerHTML='<h3 id="bbAl" data-user>'+esc(lb[a.id])+'</h3><div class="bib-st">'+_('Shown like this wherever the actor appears.')+'</div><div class="bib-r2"><div>'+f('first','First name')+'</div><div>'+f('last','Surname')+'</div></div>'+f('email','Email')+f('phone','Phone')+
         '<span class="lab">Plays</span><div class="bib-ck" data-user>'+(chKeys().sort().map(k=>'<label class="xopt"><input type="checkbox" class="sw" data-lc="'+esc(k)+'"'+(((prof(k)||{}).actors||[]).includes(a.id)?' checked':'')+'>'+esc(k)+'</label>').join(''))+'</div>'+
-        '<span class="lab">Notes</span><textarea class="fld" data-ak="note" rows="2">'+esc(a.note||'')+'</textarea><div class="bib-ac" style="margin-top:10px"><button type="button" class="xbtn" data-a="delA">'+ico('trash',14)+_(armed===a.id?'Click again to remove':'Remove actor')+'</button></div>';
+        '<span class="lab">Notes</span><textarea class="fld" data-ak="note" rows="2">'+esc(a.note||'')+'</textarea><div class="bib-ac" style="margin-top:10px"><button type="button" class="xbtn" data-a="axp">'+ico('users',14)+_('Export sides…')+'</button><button type="button" class="xbtn" data-a="delA">'+ico('trash',14)+_(armed===a.id?'Click again to remove':'Remove actor')+'</button></div>';
     };
     const sugg=()=>{
       const d=dupSuggestions(),nm=nameSuggestions(),vo=voiceOffers(),btn=(a,x,l,y)=>'<button type="button" class="xbtn" data-a="'+a+'" data-x="'+esc(x)+'"'+(y!==undefined?' data-y="'+esc(y)+'"':'')+'>'+_(l)+'</button>';
@@ -5629,6 +5774,7 @@ function openBible(sel,tab0){
       const ul=e.target.closest('[data-ul]');if(ul&&cu){const p=prof_(cu);p.actors=(p.actors||[]).filter(x=>x!==ul.dataset.ul);if(!p.actors.length)delete p.actors;profTouch();all();return}
       const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,x=b.dataset.x,y=b.dataset.y;
       if(a==='sort'){so=so==='words'?'az':so==='az'?'first':'words';$('#bbSort').textContent=_(so==='words'?'Most dialogue':so==='az'?'A to Z':'First on page');list()}
+      else if(a==='axp'){const fa=tab==='a'?ca:null,bt=tab==='a'?'a':'c';openActorExport(fa,()=>openBible(cu,bt))}
       else if(a==='add'){if(tab==='a')actorDlg(['',''],null,id=>{if(id)ca=id;openBible(cu,'a')});else addCharDlg(true)}
       else if(a==='go'){const i=firstIdx(cu);closeAll();if(i>=0)setTimeout(()=>goBlock(ed.children[i]),60)}
       else if(a==='hl'){toggleHL(cu);form()}
@@ -5647,8 +5793,166 @@ function openBible(sel,tab0){
     all();
   },{w:920,foot:[['Done',closeAll]],note:'Characters and actors are saved with the script and with every version file.'});
 }
+/* ================= actor sides (export per actor) =================
+   One job = one actor x one scope ('full' = whole script with their lines marked, 'scenes' = only the scenes they are in). Jobs run one after the other through
+   the normal print path: axPrint() sets AXJ, window.print() fires beforeprint -> axBegin() marks the DOM, layout() leaves omitted blocks out, afterprint -> axEnd() puts everything back.
+   Nothing is written into the script: highlight = class .axh, omitted block = data-axo, scene numbers kept with counter-set, watermark = a temporary copy of prefs.wm
+   (docPrefs() saves the script's own watermark meanwhile). The watermark text is aMark(): surname, or "P. Novak" when the surname is shared (the same rule as aLabels). */
+const axOpt=()=>Object.assign({mode:'full',hl:'yellow',wm:true},prefs.ax);
+function axSave(o){prefs.ax=Object.assign({},o);lsSet(UIK,uiPrefs())}
+/* the text an actor's copy carries: surname alone, first initial added only when another actor has the same surname */
+function aMark(id){
+  const a=actorMap()[id];if(!a)return'';
+  const f=(a.first||'').trim(),l=(a.last||'').trim(),L=aLabels()[id];
+  return L===(f+' '+l).trim()?(l||f||L):L;
+}
+/* every cue name that belongs to the actor: the linked characters and their aliases */
+function axOwn(id){
+  const s=new Set();
+  aChars(id).forEach(k=>{s.add(baseName(k));((prof(k)||{}).al||[]).forEach(x=>{const b=baseName(x);if(b)s.add(b)})});
+  return s;
+}
+/* what an actor's copy contains: block indexes to mark, scene headings to keep, counts for the dialog */
+function actorPlan(id,own,scs){
+  own=own||axOwn(id);scs=scs||sceneCast();
+  const bs=[...ed.children],hl=new Set(),scenes=new Set();let spk='',head=-1,cues=0,words=0;
+  scs.forEach(s=>{if(s.names.some(n=>own.has(baseName(n))))scenes.add(s.i)});
+  bs.forEach((b,i)=>{
+    const t=b.dataset.t;
+    if(isHead(t)){spk='';head=i;return}
+    if(t==='character'){spk=baseName(b.textContent);if(own.has(spk)){hl.add(i);cues++;if(head>=0)scenes.add(head)}}
+    else if(t==='paren'||t==='dialogue'||t==='alt'){if(own.has(spk)){hl.add(i);if(t==='dialogue')words+=wc(b.textContent)}}
+    else if(!['cast','synopsis','note','beat','pagebreak'].includes(t))spk='';
+  });
+  return{hl,scenes,cues,words,nScenes:scenes.size};
+}
+/* file name configuration for actor sides: the user's own naming (parts, separator, pattern) plus the actor, and the scope when both are made */
+function axNameCfg(both){
+  const c=fnCfg();
+  (both?['actor','scope']:['actor']).forEach(k=>{
+    if(c.custom&&c.custom.trim()){if(!new RegExp('\\{'+k+'\\}').test(c.custom))c.custom=c.custom.trim()+c.sep+'{'+k+'}'}
+    else if(!c.parts.includes(k))c.parts.push(k)});
+  return c;
+}
+const axScopeLabel=sc=>_(sc==='full'?'Full script':'Their scenes');
+function axJobs(ids,o){
+  const scs=sceneCast(),lb=aLabels(),both=o.mode==='both',cfg=axNameCfg(both),used=new Set(),jobs=[],skipped=[];
+  ids.forEach(id=>{
+    if(!actorMap()[id])return;
+    const own=axOwn(id),pl=actorPlan(id,own,scs);
+    if(!pl.cues&&!pl.nScenes){skipped.push(lb[id]);return}
+    (both?['full','scenes']:[o.mode]).forEach(sc=>{
+      if(sc==='scenes'&&!pl.nScenes)return;
+      const mark=aMark(id);let nm=exportBaseName({cfg,actor:mark,scope:axScopeLabel(sc)}),k=2;const b0=nm;
+      while(used.has(nm.toLowerCase()))nm=b0+' ('+k+++')';
+      used.add(nm.toLowerCase());
+      jobs.push({id,own,mark,scope:sc,file:nm,label:lb[id],opt:o});
+    });
+  });
+  return{jobs,skipped};
+}
+/* beforeprint: mark the copy of this one actor */
+function axBegin(){
+  const j=AXJ;if(!j||j.on)return;j.on=true;
+  const o=j.opt||axOpt(),bs=[...ed.children],pl=actorPlan(j.id,j.own);
+  bs.forEach((b,i)=>{if(pl.hl.has(i))b.classList.add('axh')});
+  app.classList.add('ax-'+o.hl);
+  if(j.scope==='scenes'){
+    let keep=false,num=0;
+    bs.forEach((b,i)=>{
+      if(isHead(b.dataset.t)){num++;keep=pl.scenes.has(i);if(keep)b.style.setProperty('counter-set','sc '+num)}   /* real scene number, not 1,2,3 */
+      if(!keep)b.dataset.axo='1';
+    });
+  }
+  /* the existing watermark engine does the work: the actor is the one recipient, {name} carries the mark; the script's own layers stay */
+  j.wmSave=prefs.wm;
+  const w=clone(prefs.wm);
+  if(o.wm){
+    const has=w.on&&w.layers.some(l=>l.on&&l.type==='text'&&/\{name\}/.test(l.text));
+    if(!w.on)w.layers=[];
+    if(!has)w.layers.push(Object.assign(wmDef(),{text:'{name}',mode:'tile',size:20,alpha:9,caps:false}));
+    w.on=true;w.recips=[j.mark];
+  }else w.recips=[];                       /* no recipient copies: one clean file */
+  prefs.wm=w;wmRev++;renderWM.key='';
+}
+/* afterprint: nothing of the export stays behind */
+function axEnd(){
+  const j=AXJ;if(!j||!j.on)return;j.on=false;
+  [...ed.children].forEach(b=>{b.classList.remove('axh');delete b.dataset.axo;b.style.removeProperty('counter-set')});
+  app.classList.remove('ax-yellow','ax-grey','ax-bar');
+  if(j.wmSave){prefs.wm=j.wmSave;j.wmSave=null}
+  wmRev++;renderWM.key='';try{renderTp()}catch(e){}
+}
+function axPrint(jb){
+  return new Promise(res=>{
+    AXJ=jb;jb.on=false;jb.fin=()=>{jb.fin=null;res(true)};
+    try{titleForPrint();window.print()}catch(e){jb.fin=null;titleRestore();res(false)}
+  });
+}
+let axBusy=false;
+async function runActorExport(ids,o){
+  if(axBusy||AXJ)return;
+  const{jobs,skipped}=axJobs(ids,o);
+  if(!jobs.length){toast('Nothing to export for these actors');return}
+  axBusy=true;closeAll();let done=0,stop=false;
+  try{
+    await new Promise(r=>setTimeout(r,120));
+    for(let k=0;k<jobs.length;k++){
+      const ok=await axPrint(jobs[k]);AXJ=null;
+      if(!ok){toast('Printing is not available here');break}
+      done++;
+      if(k<jobs.length-1){
+        stop=false;toastAct(_('{done} of {n} · next: {name}',{done,n:jobs.length,name:jobs[k+1].file}),'Stop',()=>{stop=true});
+        await new Promise(r=>setTimeout(r,2400));
+        if(stop)break;
+      }
+    }
+  }finally{AXJ=null;axBusy=false}
+  if(done)toast(_('Actor sides: {n}',{n:_n('file',done)})+(skipped.length?' · '+_('left out, not in the script: {names}',{names:skipped.join(', ')}):''));
+}
+function openActorExport(pre,back){
+  if(!canWrite()){toast('Open a script first');return}
+  commit();
+  const back_=back||closeAll;
+  const lb=aLabels(),scs=sceneCast();
+  const rows=Object.values(actorMap()).map(a=>{const own=axOwn(a.id),pl=actorPlan(a.id,own,scs);
+    return{id:a.id,label:lb[a.id],mark:aMark(a.id),chars:aChars(a.id),pl,ok:pl.cues>0||pl.nScenes>0}}).sort((x,y)=>x.label.localeCompare(y.label));
+  const sel=new Set(pre&&rows.some(r=>r.id===pre&&r.ok)?[pre]:rows.filter(r=>r.ok).map(r=>r.id));
+  const o=axOpt();
+  const go=()=>{const ids=rows.filter(r=>sel.has(r.id)).map(r=>r.id);if(!ids.length){toast('Choose at least one actor');return}axSave(o);runActorExport(ids,o)};
+  showDlg('Actor sides',db=>{
+    if(!rows.length){
+      db.innerHTML='<div class="bib-e"><b>'+_('No actors yet')+'</b><span>'+_('Add the actors in the character hub and link each one to the characters they play. Then each actor gets a copy of their own.')+'</span></div>';return}
+    const seg=(k,opts)=>'<span class="seg2" data-seg="'+k+'">'+opts.map(([v,l])=>'<button type="button" data-v="'+v+'" aria-pressed="'+(o[k]===v)+'">'+_(l)+'</button>').join('')+'</span>';
+    db.innerHTML='<span class="lab" style="margin-top:2px">Actors</span><div class="axl" id="axL"></div><div class="axt"><button type="button" class="xbtn" data-a="all">'+_('Select all')+'</button><button type="button" class="xbtn" data-a="none">'+_('None')+'</button></div>'+
+      '<span class="lab">What to export</span>'+seg('mode',[['full','Full script'],['scenes','Their scenes'],['both','Both']])+'<p class="muted axn" id="axMn"></p>'+
+      '<span class="lab">Highlight</span>'+seg('hl',[['yellow','Soft yellow'],['grey','Grey'],['bar','Margin bar only']])+'<p class="muted axn">'+_('A bar in the margin marks each line, so it also reads in black and white.')+'</p>'+
+      '<label class="xopt" style="margin-top:12px"><input type="checkbox" class="sw" id="axW"'+(o.wm?' checked':'')+'>'+_('Watermark with the actor’s name')+'</label><p class="muted axn">'+_('Surname only; a shared surname gets the first initial. Your own watermark layers stay as they are.')+'</p>'+
+      '<div id="axF"></div><p class="muted axn">'+_('The script is never changed: highlights and watermarks exist only in the files. No contact details are included.')+'</p>';
+    const L=$('#axL'),foot=()=>dlg.querySelector('.df .btn:last-child');
+    const first=()=>rows.find(r=>sel.has(r.id))||rows.find(r=>r.ok)||rows[0];
+    const preview=()=>{const f=$('#axF');f.replaceChildren();const r=first(),both=o.mode==='both';
+      f.append(fnPanel('pdf',{act:true,redo:preview,name:()=>exportBaseName({cfg:axNameCfg(both),actor:r?r.mark:'',scope:axScopeLabel(both?'full':o.mode==='scenes'?'scenes':'full')})+'.pdf'}))};
+    const upd=()=>{
+      L.innerHTML=rows.map(r=>'<label class="axr'+(r.ok?'':' off')+'"><input type="checkbox" class="sw" data-id="'+r.id+'"'+(sel.has(r.id)?' checked':'')+(r.ok?'':' disabled')+'><span><b data-user>'+esc(r.label)+'</b><small data-user>'+esc(!r.chars.length?_('No character linked'):!r.ok?_('Not in the script'):r.chars.join(', ')+' · '+_n('scene',r.pl.nScenes)+' · '+_n('cue',r.pl.cues))+'</small></span>'+(r.ok?'<em data-user title="'+esc(_('Watermark'))+'">'+esc(r.mark)+'</em>':'')+'</label>').join('');
+      $('#axMn').textContent=_(o.mode==='full'?'The whole script, with this actor’s lines marked.':o.mode==='scenes'?'Only the scenes this actor is in, with the original scene numbers.':'Two files per actor: the whole script and their scenes.');
+      const n=axJobs(rows.filter(r=>sel.has(r.id)).map(r=>r.id),o).jobs.length;
+      const b=foot();if(b){b.textContent=_('Export')+' · '+_n('file',n);b.disabled=!n}
+      preview();
+    };
+    db.onchange=e=>{const t=e.target;
+      if(t.dataset.id){t.checked?sel.add(t.dataset.id):sel.delete(t.dataset.id);upd()}
+      else if(t.id==='axW'){o.wm=t.checked}};
+    db.onclick=e=>{
+      const sb=e.target.closest('[data-seg] button');if(sb){const k=sb.parentNode.dataset.seg;o[k]=sb.dataset.v;sb.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===sb)));upd();return}
+      const b=e.target.closest('[data-a]');if(!b)return;
+      if(b.dataset.a==='all'){rows.forEach(r=>{if(r.ok)sel.add(r.id)});upd()}else if(b.dataset.a==='none'){sel.clear();upd()}};
+    upd();setTimeout(upd,0);   /* the footer button exists only after this render: refresh its file count once more */
+  },{w:560,foot:[['Cancel',back_,'ghost'],['Export',go]]});
+}
 $('#addCh').onclick=()=>addCharDlg(false);
 
+{const hb=$('#home .hbar');if(hb&&!hb.querySelector('.brand')){const d=document.createElement('div');d.className='brand';d.setAttribute('aria-label','MLX Ink');d.innerHTML=featherSvg(24)+'<span>MLX Ink</span>';hb.prepend(d)}}
 $('#hTheme').onclick=cycleTheme;$('#hLang').onclick=openLangDlg;
 
 Object.assign(STR.cs,{"Scripts were updated to the new storage format. Your originals are kept as a backup.":"Scénáře byly převedeny do nového formátu úložiště. Originály zůstávají uložené jako záloha.","These scripts could not be converted and were left untouched: {names}":"Tyto scénáře se nepodařilo převést a zůstaly beze změny: {names}","Some stored scripts could not be read and were skipped: {n}":"Některé uložené scénáře nešlo přečíst a byly přeskočeny: {n}","Some scripts were made by a newer version of the app and were left untouched: {n}":"Některé scénáře vytvořila novější verze aplikace a zůstaly beze změny: {n}","Could not save to disk. Your work is kept and saving will be retried. Download a project file to be safe.":"Uložení na disk se nezdařilo. Práce je zachována a ukládání se zopakuje. Pro jistotu stáhněte soubor projektu.","This file was made by a newer version of the app.":"Tento soubor vytvořila novější verze aplikace.","This script was made by a newer version of the app.":"Tento scénář vytvořila novější verze aplikace.","Only the script was imported here. Use Import on the home screen for the whole project.":"Importován byl jen scénář. Celý projekt naimportujete na úvodní obrazovce.","The copy on disk differs from the one in memory for: {n}":"Kopie na disku se liší od té v paměti u: {n}"});
@@ -5703,7 +6007,7 @@ Object.assign(STR.cs,{"Scripts were updated to the new storage format. Your orig
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{layout();after()});
   if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',()=>relayout());
   if(!canWrite()||!prefs.resume)showHome();
-  if(!prefs.toured)setTimeout(()=>{if(!prefs.toured&&!dlg.classList.contains('open'))openTour(0)},700);
+  if(!prefs.toured)setTimeout(()=>{if(prefs.toured||dlg.classList.contains('open'))return;if(!prefs.ui&&!prefs.langAsked)openWelcome();else openTour(0)},700);
   else if(!matchMedia('(pointer: coarse)').matches){ed.focus({preventScroll:true});setCaret(ed.firstElementChild,0)}
   if(mg.migrated.length)toastAct('Scripts were updated to the new storage format. Your originals are kept as a backup.','OK',()=>{});
   if(mg.diskBad)toastAct(_('The copy on disk differs from the one in memory for: {n}',{n:mg.diskBad}),'OK',()=>{});

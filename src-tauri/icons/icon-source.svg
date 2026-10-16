@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="233" height="226" viewBox="0 0 233 226" role="img" aria-labelledby="title desc">
+  <title id="title">MLX Ink app icon</title>
+  <desc id="desc">Teal angular feather on a dark rounded-square background with a subtle upper-left metallic gleam. The exterior corners are transparent.</desc>
+  <defs>
+    <radialGradient id="background" cx="43%" cy="29%" r="88%">
+      <stop offset="0" stop-color="#141516"/>
+      <stop offset="0.58" stop-color="#0b0c0d"/>
+      <stop offset="1" stop-color="#050606"/>
+    </radialGradient>
+    <linearGradient id="edgeBase" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#777b7d"/>
+      <stop offset="0.10" stop-color="#5b5f61"/>
+      <stop offset="0.25" stop-color="#292b2d"/>
+      <stop offset="0.68" stop-color="#202224"/>
+      <stop offset="1" stop-color="#383a3c"/>
+    </linearGradient>
+    <linearGradient id="featherTeal" x1="0.12" y1="0" x2="0.82" y2="1">
+      <stop offset="0" stop-color="#00D9BD"/>
+      <stop offset="0.42" stop-color="#00BFA6"/>
+      <stop offset="1" stop-color="#00A98F"/>
+    </linearGradient>
+    <clipPath id="iconClip">
+      <rect x="16.5" y="12.5" width="203" height="198.5" rx="44"/>
+    </clipPath>
+  </defs>
+
+  <!-- Single rounded-square body; corners outside the shape stay transparent. -->
+  <rect x="16.5" y="12.5" width="203" height="198.5" rx="44"
+        fill="url(#background)" stroke="url(#edgeBase)" stroke-width="1.8"/>
+
+  <!-- Original feather geometry, kept crisp with no blur/glow. -->
+  <path d="M 1004 103 L 740 293 L 592 441 L 474 651 L 292 1021 L 236 1140 L 385 912 L 388 903 L 469 772 L 569 622 L 674 479 L 752 380 L 810 310 L 811 312 L 713 448 L 577 645 L 437 865 L 718 670 L 796 521 L 657 578 L 651 578 L 815 485 L 909 292 Z"
+        transform="translate(31.4 20) scale(0.145)"
+        fill="url(#featherTeal)" fill-rule="evenodd"/>
+</svg>

@@ -27,15 +27,23 @@ npm run dev              # browser only (http://localhost:1420) - same app, orig
 npm run tauri build
 ```
 
-Result: `src-tauri\target\release\bundle\nsis\MLX Ink_0.1.0_x64-setup.exe`
+Result: `src-tauri\target\release\bundle\nsis\MLX Ink_0.1.2_x64-setup.exe`
 (per-user install, no admin rights; WebView2 is downloaded by the installer only if missing).
 Standalone exe without installer: `src-tauri\target\release\mlx-ink.exe`.
+The executable, installer, and uninstaller use the dark app icon with its teal feather. The NSIS
+wizard uses a light neutral background for readable native controls, Segoe UI text, and matching
+branded header and welcome/finish artwork. Its Add/Remove Programs icon points to the uninstaller
+executable. The theme is in
+`src-tauri\nsis\installer.nsi`. To replace the app mark, provide a square PNG and run
+`npx tauri icon path\to\your-logo.png --output src-tauri\icons`; update the two installer bitmaps
+in `src-tauri\icons` to match the new artwork.
 
 ## Set up GitHub releases and app updates
 
 The desktop app checks for updates at startup and has a **Check for Updates…** option in the
-home-screen menu. Updates are downloaded only after the user confirms. GitHub Actions builds and
-publishes a signed Windows release whenever a version tag such as `v0.1.1` is pushed.
+home-screen menu. When a signed release is available, the app downloads and installs it
+automatically; a toast indicates when the download starts. GitHub Actions builds and publishes a
+signed Windows release whenever a version tag such as `v0.1.2` is pushed.
 
 Before the first release:
 
@@ -51,7 +59,7 @@ Before the first release:
    downloadable for the unauthenticated updater to reach them.
 3. For each release, update the version in `src-tauri\tauri.conf.json`, `src-tauri\Cargo.toml`,
    and `package.json` to the same new version. Commit the changes, create a matching `v<version>`
-   tag (for example, `v0.1.1`), then push the commit and tag. The workflow checks the tag against
+   tag (for example, `v0.1.2`), then push the commit and tag. The workflow checks the tag against
    the Tauri config version before building.
 4. Wait for the **Release** workflow to finish. It creates a GitHub Release and uploads the
    Windows installer and signed updater manifest/assets used by existing app installations.
