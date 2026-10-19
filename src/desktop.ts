@@ -4,8 +4,8 @@
  * The main application lives in index.html. This module adds what a packaged desktop app needs
  * and does nothing at all when the page is opened in a normal browser:
  *
- *  1. window.mlxDesktop.saveText()  – native "Save as" dialog for every export (browser downloads
- *     are unreliable inside a WebView).
+ *  1. Native "Save as" dialogs for text and binary exports, plus native folder selection and
+ *     atomic project-folder synchronization (browser file APIs are unreliable inside a WebView).
  *  2. window.mlxDesktop.checkForUpdates() – checks for signed GitHub releases and silently installs
  *     them when available.
  *  3. A write-through mirror of the app's localStorage data (keys "klapka.*") to real files in the
@@ -26,6 +26,26 @@ type UpdateCheckResult = "up-to-date" | "installed";
 interface MlxDesktop {
   /** Shows the native Save dialog. Resolves to the saved file's name, or null if cancelled. */
   saveText(name: string, text: string): Promise<string | null>;
+  saveBinary(name: string, base64Data: string): Promise<string | null>;
+  chooseProjectFolder(projectId: string, title: string): Promise<string | null>;
+  listProjectFolders(): Promise<Array<{ projectId: string; name: string }>>;
+  writeProjectFolder(
+    projectId: string,
+    files: Array<{ path: string; text?: string; data?: string; bin?: boolean }>,
+    dirs: string[],
+    since: number,
+  ): Promise<number>;
+  openProjectFolder(projectId: string): Promise<{
+    name: string;
+    entries: Array<{
+      rel: string;
+      dir: boolean;
+      text?: string;
+      base64?: string;
+      size?: number;
+      mime?: string;
+    }>;
+  } | null>;
   checkForUpdates(): Promise<UpdateCheckResult>;
 }
 
@@ -44,7 +64,7 @@ const UI_KEY = "klapka.ui";
 const RELOAD_GUARD = "mlxink.restored";
 const FLUSH_DELAY_MS = 400;
 const RETRY_DELAY_MS = 5000;
-const CLOSE_FLUSH_TIMEOUT_MS = 3500;
+const CLOSE_FLUSH_TIMEOUT_MS = 10000;
 
 // Same check the Tauri API itself uses internally.
 const inTauri = "__TAURI_INTERNALS__" in window;
@@ -197,6 +217,28 @@ if (inTauri) {
       if (!path) return null;
       return path.split(/[\\/]/).pop() || path;
     },
+    async saveBinary(name, base64Data) {
+      const path = await invoke<string | null>("export_binary", { name, contents: base64Data });
+      if (!path) return null;
+      return path.split(/[\\/]/).pop() || path;
+    },
+    chooseProjectFolder: (projectId, title) =>
+      invoke<string | null>("choose_project_folder", { projectId, title }),
+    listProjectFolders: () =>
+      invoke<Array<{ projectId: string; name: string }>>("list_project_folders"),
+    writeProjectFolder: (projectId, files, dirs, since) =>
+      invoke<number>("write_project_folder", { projectId, files, dirs, since }),
+    openProjectFolder: (projectId) => invoke<{
+      name: string;
+      entries: Array<{
+        rel: string;
+        dir: boolean;
+        text?: string;
+        base64?: string;
+        size?: number;
+        mime?: string;
+      }>;
+    } | null>("open_project_folder", { projectId }),
     checkForUpdates,
   };
   void startMirror();

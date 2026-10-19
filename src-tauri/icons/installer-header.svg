@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="228" viewBox="0 0 600 228" role="img" aria-labelledby="title desc">
+  <title id="title">MLX Ink installer header</title>
+  <desc id="desc">Teal feather mark and MLX Ink wordmark on a soft neutral background.</desc>
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#18201f"/>
+      <stop offset="1" stop-color="#090c0c"/>
+    </linearGradient>
+    <linearGradient id="feather" x1=".12" y1="0" x2=".82" y2="1">
+      <stop stop-color="#30e0c4"/>
+      <stop offset=".48" stop-color="#00bfa6"/>
+      <stop offset="1" stop-color="#00a98f"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="228" fill="#f4f6f5"/>
+  <rect x="40" y="34" width="160" height="160" rx="34" fill="url(#tile)"/>
+  <path d="M 1004 103 L 740 293 L 592 441 L 474 651 L 292 1021 L 236 1140 L 385 912 L 388 903 L 469 772 L 569 622 L 674 479 L 752 380 L 810 310 L 811 312 L 713 448 L 577 645 L 437 865 L 718 670 L 796 521 L 657 578 L 651 578 L 815 485 L 909 292 Z"
+        transform="translate(57 46) scale(.1034)" fill="url(#feather)" fill-rule="evenodd"/>
+  <path d="M230 45v138" stroke="#00bfa6" stroke-width="4" stroke-linecap="round"/>
+  <text x="264" y="141" fill="#18201f" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="650" letter-spacing="-1.7">MLX Ink</text>
+</svg>
